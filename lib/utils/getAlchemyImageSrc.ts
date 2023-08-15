@@ -1,7 +1,6 @@
 import { Nft, OwnedNft } from "alchemy-sdk";
 
 export function getAlchemyImageSrc(token?: Nft | OwnedNft) {
-  // mint count for selected tokens
 
   if (!token) {
     return "/no-img.jpg";
