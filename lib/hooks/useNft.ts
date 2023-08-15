@@ -54,6 +54,10 @@ export const useNft = ({
       return alchemy.nft.getNftMetadataBatch([{ contractAddress, tokenId }]);
     }
   );
+console.log(customNftData,'customNftData');
+console.log(nftMetadata?.[0],'nftMetadata?.[0]');
+console.log(hasCustomImplementation && !customNftError);
+
 
   return {
     data:

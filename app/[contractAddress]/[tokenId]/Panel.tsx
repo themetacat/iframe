@@ -99,6 +99,8 @@ export const Panel = ({ className, approvalTokensCount, account, tokens, title }
         {tokens && tokens.length ? (
           <ul className="grid grid-cols-3 gap-2 overflow-y-auto custom-scroll">
             {tokens.map((t, i) => {
+              console.log(tokens,6666);
+              
               let media = t?.media[0]?.gateway || t?.media[0]?.raw;
               const isVideo = t?.media[0]?.format === "mp4";
               if (isVideo) {

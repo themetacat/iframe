@@ -42,11 +42,16 @@ export default function Token({ params, searchParams }: TokenParams) {
     chainId: chainIdNumber,
   });
 
+
+  
+
   useEffect(() => {
     if (!isNil(nftImages) && nftImages.length) {
       const imagePromises = nftImages.map((src: string) => {
         return new Promise((resolve, reject) => {
           const image = new Image();
+          console.log(image,989);
+          
           image.onload = resolve;
           image.onerror = reject;
           image.src = src;
@@ -95,6 +100,8 @@ export default function Token({ params, searchParams }: TokenParams) {
         getLensNfts(account),
       ]);
       if (data) {
+        console.log(data,33333);
+        
         setNfts(data);
       }
       if (lensData) {
@@ -133,6 +140,7 @@ export default function Token({ params, searchParams }: TokenParams) {
       }
     }
   }, [nfts, approvalData, lensNfts]);
+console.log(nftImages,'nftImages');
 
   return (
     <div className="h-screen w-screen bg-slate-100">
