@@ -61,7 +61,7 @@ export const Panel = ({
           onClick={() => {
             const textarea = document.createElement("textarea");
             textarea.textContent = account;
-            textarea.style.position = "fixed"; // Prevent scrolling to bottom of page in MS Edge.
+            textarea.style.position = "fixed"; 
             document.body.appendChild(textarea);
             textarea.select();
 
