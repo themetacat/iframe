@@ -225,7 +225,7 @@ class API {
   }
 
   public async getSearchDetail(
-    query,
+    query:any,
     page:number,
     per_page:number,
     search_item:string,
@@ -290,7 +290,7 @@ class API {
     return json;
   }
 
-  public async getDataHandle(pointers): Promise<any> {
+  public async getDataHandle(pointers:any): Promise<any> {
   // const url = 'https://peer.decentraland.org/content/entities/active';
 //       const headers = {
 //   'authority': 'peer.decentraland.org',
@@ -385,7 +385,7 @@ fetch(url, {
   }
 
 //详情页列表页
-  public async getBagsDetail(TBAAddress): Promise<any> {
+  public async getBagsDetail(TBAAddress:any): Promise<any> {
     const search = qs.stringify({ TBAAddress}, { addQueryPrefix: true });
     const url = `https://polygon-mainnet.g.alchemy.com/nft/v2/6UJiv2Zs3C0EUTmYMoDBt7PSQCGMvCn2/getNFTs?pageKey=undefined&owner=${TBAAddress}&pageSize=100&withMetadata=true`;
     // const url = `https://polygon-mainnet.g.alchemy.com/nft/v2/6UJiv2Zs3C0EUTmYMoDBt7PSQCGMvCn2/getNFTs?pageKey=undefined&owner=0xc96b7C00cBA95ea3C0E10e21Ea4661d481204f5C&pageSize=100&withMetadata=true`;
@@ -397,7 +397,7 @@ fetch(url, {
   }
 
 //详情页TBA
-  public async getBagsNum(tokenId): Promise<any> {
+  public async getBagsNum(tokenId:any): Promise<any> {
     const search = qs.stringify({ tokenId}, { addQueryPrefix: true });
     const url = `https://polygon-mainnet.g.alchemy.com/nft/v2/6UJiv2Zs3C0EUTmYMoDBt7PSQCGMvCn2/getNFTMetadata?contractAddress=0x7524194dfCf68820006891d5D5810065F233A0B8&tokenId=${tokenId}&refreshCache=false`;
 
@@ -410,7 +410,7 @@ fetch(url, {
     return json;
   }
 
-  public async getModelInfo(token_id): Promise<any> {
+  public async getModelInfo(token_id:any): Promise<any> {
     const search = qs.stringify({ token_id}, { addQueryPrefix: true });
     // const url = `https://api.metacat.world/api/v1/get_babylon_model_info?token_id=${token_id}`;
     const url = `http://47.243.184.241/api/v1/get_babylon_model_info?token_id=${token_id}`;
@@ -424,7 +424,7 @@ fetch(url, {
     return json;
   }
 
-  public async rmBabylonModel(token: string,token_id): Promise<any> {
+  public async rmBabylonModel(token: string,token_id:any): Promise<any> {
     const search = qs.stringify({ token_id}, { addQueryPrefix: false });
     const url = `https://api.metacat.world/api/v1/rm_babylon_model_info?token_id=${token_id}`;
 
@@ -442,7 +442,7 @@ fetch(url, {
 
     
 
-  public async setModelInfo(token,costume): Promise<any> {
+  public async setModelInfo(token:any,costume:any): Promise<any> {
 //     const search = qs.stringify({ costume}, { addQueryPrefix: false });
 //     const url = `http://8.130.23.16/api/v1/set_babylon_model_info`;
 // // const formData = new FormData() as any;
@@ -497,7 +497,7 @@ const url = 'https://api.metacat.world/api/v1/set_babylon_model_info'; // 替换
   }
 
 //列表页
-  public async getBagsList(address): Promise<any> {
+  public async getBagsList(address:any): Promise<any> {
     const search = qs.stringify({ address}, { addQueryPrefix: true });
     const url = `https://polygon-mainnet.g.alchemy.com/nft/v2/6UJiv2Zs3C0EUTmYMoDBt7PSQCGMvCn2/getNFTs?owner=${address}&contractAddresses[]=0x7524194dfCf68820006891d5D5810065F233A0B8&withMetadata=true&pageSize=48`;
 
@@ -507,7 +507,7 @@ const url = 'https://api.metacat.world/api/v1/set_babylon_model_info'; // 替换
     return json;
   }
 
-  public async getAccount(tokenId): Promise<any> {
+  public async getAccount(tokenId:any): Promise<any> {
     const search = qs.stringify({ tokenId}, { addQueryPrefix: true });
     // const url = `https://polygon-mumbai.g.alchemy.com/nft/v2/6UJiv2Zs3C0EUTmYMoDBt7PSQCGMvCn2/getNFTMetadata?contractAddress=0x7524194dfCf68820006891d5D5810065F233A0B8&tokenId=${tokenId}&refreshCache=false`;
     const url = `https://polygon-mainnet.g.alchemy.com/nft/v3/0jIWuk4VdK14pDWrrwFoXaSShg_2tu32/refreshNftMetadata`;

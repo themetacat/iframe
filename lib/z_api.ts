@@ -585,7 +585,7 @@ class API {
 
   // 14.2 获取当前登录者 Cryptovoxels 地块每日/每周/每月流量占比接口
 
-  public async req_cv_parcel_traffic_daily(token): Promise<any> {
+  public async req_cv_parcel_traffic_daily(token:any): Promise<any> {
     const url = `${this.url}/user/get_cv_parcel_traffic_percentage`;
     const result = await fetch(url, {
       method: 'get',
@@ -679,7 +679,7 @@ class API {
 
   // 14.8 获取当前登录者 dece 地块每日/每周/每月流量占比接口
 
-  public async req_deceData_parcel_traffic_daily(token): Promise<any> {
+  public async req_deceData_parcel_traffic_daily(token:any): Promise<any> {
     const url = `${this.url}/user/get_dcl_parcel_traffic_percentage`;
     const result = await fetch(url, {
       method: 'get',
@@ -851,7 +851,7 @@ class API {
 
   // **7.3 用户登出接口 **
 
-  public async req_user_logout(token) {
+  public async req_user_logout(token:any) {
     const url = `${this.url}/user/logout`;
     const result = await fetch(url, {
       method: 'post',
@@ -1287,7 +1287,7 @@ class API {
     return json;
   }
 
-  public async req_detailWearableDcl_list(contract_address, item_id,
+  public async req_detailWearableDcl_list(contract_address:any, item_id:any,
   ) {
     const search = qs.stringify({ contract_address, item_id }, { addQueryPrefix: true });
     const url = `${this.url}/wearable/get_dcl_wearable_detail${search}`;
@@ -1301,7 +1301,7 @@ class API {
     return json;
   }
 
-  public async req_detailWearableMona_list(creator_address, wearable_id,
+  public async req_detailWearableMona_list(creator_address:any, wearable_id:any,
   ) {
     const search = qs.stringify({ creator_address, wearable_id }, { addQueryPrefix: true });
     const url = `${this.url}/wearable/get_mona_wearable_detail${search}`;
@@ -1410,7 +1410,7 @@ class API {
 
   }
 
-  public async req_get_building_detail_info(building_link) {
+  public async req_get_building_detail_info(building_link:any) {
 
     const search = qs.stringify({building_link}, {addQueryPrefix: true });
 
@@ -1491,7 +1491,7 @@ class API {
     return json;
   }
 
-  public async req_get_wearable_detail(id) {
+  public async req_get_wearable_detail(id:any) {
     const search = qs.stringify({ wearable_id: id }, { addQueryPrefix: true });
     // const url = `http://8.130.23.16/api/v1/wearable/get_wearable_detail${search}`;
     const url = `${this.url}/wearable/get_wearable_detail${search}`;

@@ -10,7 +10,7 @@ export const getCVEventList = async (cursor: number, count: number) => {
   return json;
 };
 
-export const getDataHandle = async (pointers) => {
+export const getDataHandle = async (pointers:any) => {
   const url = 'https://api.metacat.world/api/v1/get_dcl_wearable_content_entities';
 const headers = {
     'content-type': 'application/json',
@@ -39,7 +39,7 @@ try {
 }
 };
 
-export const getBagsDetail = async (TBAAddress) => {
+export const getBagsDetail = async (TBAAddress:any) => {
   const search = qs.stringify({ TBAAddress }, { addQueryPrefix: true });
   
   const url = `/api/bags_detail_list${search}`;
@@ -50,7 +50,7 @@ export const getBagsDetail = async (TBAAddress) => {
   return json;
 };
 
-export const getBagsNum = async (tokenId) => {
+export const getBagsNum = async (tokenId:any) => {
   const search = qs.stringify({ tokenId }, { addQueryPrefix: true });
   const url = `/api/bags_num_list${search}`;
 
@@ -61,7 +61,7 @@ export const getBagsNum = async (tokenId) => {
   return json;
 };
 
-export const getModelInfo = async (token_id) => {
+export const getModelInfo = async (token_id:any) => {
   const search = qs.stringify({ token_id }, { addQueryPrefix: true });
   const url = `/api/get_model_info${search}`;
 
@@ -72,7 +72,7 @@ export const getModelInfo = async (token_id) => {
   return json;
 };
 
-export const rmBabylonModel = async (token,token_id) => {
+export const rmBabylonModel = async (token:any,token_id:any) => {
   const search = qs.stringify({ token_id }, { addQueryPrefix: true });
   const url = `/api/rm_babylon_model${search}`;
 
@@ -88,7 +88,7 @@ export const rmBabylonModel = async (token,token_id) => {
 };
 
 
-export const setModelInfo = async (token,costume) => {
+export const setModelInfo = async (token:any,costume:any) => {
   // const search = qs.stringify({costume}, { addQueryPrefix: false });
   // const url = `/api/set_model_info`;
   // // const formData = new FormData();
@@ -141,7 +141,7 @@ export const setModelInfo = async (token,costume) => {
 
 };
 
-export const getAccount = async (tokenId) => {
+export const getAccount = async (tokenId:any) => {
   const search = qs.stringify({ tokenId }, { addQueryPrefix: true });
   const url = `/api/bags_account${search}`;
 
@@ -160,7 +160,7 @@ export const getAccount = async (tokenId) => {
   return json;
 };
 
-export const getBagsList = async (address) => {
+export const getBagsList = async (address:any) => {
   const search = qs.stringify({ address }, { addQueryPrefix: true });
   const url = `/api/bags_list${search}`;
 
@@ -320,7 +320,7 @@ export const getSomSpaceList = async (page: number, count: number, query: string
   return json;
 };
 
-export const getSearchDetail = async ( query,
+export const getSearchDetail = async ( query:any,
   page:number,
   per_page:number,
   search_item:string,) => {

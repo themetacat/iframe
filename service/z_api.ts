@@ -829,7 +829,7 @@ export const req_all_number_sales = async () => {
   return json;
 };
 
-export const req_user_logout = async (token) => {
+export const req_user_logout = async (token:any) => {
   const url = '/api/logout';
   const result = await fetch(url, {
     method: 'post',
@@ -914,7 +914,7 @@ export const req_substrata_level_three = async () => {
   return json;
 };
 
-export const req_substrata_detail = async (tokenId) => {
+export const req_substrata_detail = async (tokenId:any) => {
   const search = qs.stringify({ tokenId }, { addQueryPrefix: true });
   const url = `/api/get_substrata_parcel_detail${search}`;
 
@@ -1271,7 +1271,7 @@ export const req_wearableMona_list = async (page: number, count: number,
   return json;
 };
 
-export const req_detailWearableDcl_list = async (contract_address, item_id,
+export const req_detailWearableDcl_list = async (contract_address:any, item_id:any,
   ) => {
   const search = qs.stringify({ contract_address, item_id, }, { addQueryPrefix: true });
   const url = `/api/get_wearableDclDetail_list${search}`;
@@ -1285,7 +1285,7 @@ export const req_detailWearableDcl_list = async (contract_address, item_id,
   return json;
 };
 
-export const req_detailWearableMona_list = async (creator_address,wearable_id,
+export const req_detailWearableMona_list = async (creator_address:any,wearable_id:any,
   ) => {
   const search = qs.stringify({creator_address,  wearable_id, }, { addQueryPrefix: true });
   const url = `/api/get_wearableMonaDetail_list${search}`;
@@ -1414,7 +1414,7 @@ export const req_user_add_or_edit_building = async ( token: string,
   return json;
 };
 
-export const req_get_building_detail_info = async ( building_link)=> {
+export const req_get_building_detail_info = async ( building_link:any)=> {
   
   const search = qs.stringify({   
     building_link:building_link
@@ -1468,7 +1468,7 @@ export const req_set_wearable_show_status = async (
   return json;
 };
 
-export const req_get_wearable_detail = async (id) => {
+export const req_get_wearable_detail = async (id:any) => {
   const search = qs.stringify({ wearable_id: id }, { addQueryPrefix: true });
   const url = `/api/get_wearable_detail${search}`;
 
