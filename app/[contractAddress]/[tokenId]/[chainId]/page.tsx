@@ -11,6 +11,7 @@ import { TbaOwnedNft } from "@/lib/types";
 import { getAddress } from "viem";
 import { TokenDetail } from "./TokenDetail";
 import { HAS_CUSTOM_IMPLEMENTATION } from "@/lib/constants";
+import VoxFiled from '../vox'
 
 interface TokenParams {
   params: {
@@ -163,25 +164,26 @@ console.log(nftImages,'nftImages');
                 <TbLogo />
               </div>
             ) : (
-              <div
-                className={`grid w-full grid-cols-1 grid-rows-1 transition ${
-                  imagesLoaded ? "" : "blur-xl"
-                }`}
-              >
-                {/* {!isNil(nftImages) ? (
-                  nftImages.map((image, i) => (
-                    <img
-                      key={i}
-                      className="col-span-1 col-start-1 row-span-1 row-start-1 translate-x-0"
-                      src={image}
-                      alt="Nft image"
-                    />
-                  ))
-                ) : (
-                  <></>
-                )} */}
-                能不能出来
-              </div>
+              <>     <VoxFiled/></>
+              // <div
+              //   className={`grid w-full grid-cols-1 grid-rows-1 transition ${
+              //     imagesLoaded ? "" : "blur-xl"
+              //   }`}
+              // >
+              //   {/* {!isNil(nftImages) ? (
+              //     nftImages.map((image, i) => (
+              //       <img
+              //         key={i}
+              //         className="col-span-1 col-start-1 row-span-1 row-start-1 translate-x-0"
+              //         src={image}
+              //         alt="Nft image"
+              //       />
+              //     ))
+              //   ) : (
+              //     <></>
+              //   )} */}
+           
+              // </div>
             )}
           </div>
         </div>
