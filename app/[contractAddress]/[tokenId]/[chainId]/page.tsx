@@ -168,7 +168,7 @@ console.log(nftImages,'nftImages');
                   imagesLoaded ? "" : "blur-xl"
                 }`}
               >
-                {!isNil(nftImages) ? (
+                {/* {!isNil(nftImages) ? (
                   nftImages.map((image, i) => (
                     <img
                       key={i}
@@ -179,7 +179,8 @@ console.log(nftImages,'nftImages');
                   ))
                 ) : (
                   <></>
-                )}
+                )} */}
+                能不能出来
               </div>
             )}
           </div>
