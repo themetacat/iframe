@@ -1,17 +1,28 @@
 "use client";
 /* eslint-disable @next/next/no-img-element */
-import { useEffect, useState } from "react";
+import React,{ useEffect, useState } from "react";
 import useSWR from "swr";
 import { isNil } from "lodash";
+import cn from "classnames";
+import style from "./index.module.css";
 import { getAccount, getAccountStatus, getLensNfts, getNfts } from "@/lib/utils";
+import { createWalletClient, http, custom, WalletClient, Account } from "viem";
+import { polygon } from "viem/chains";
 import { rpcClient } from "@/lib/clients";
 import { TbLogo } from "@/components/icon";
 import { useGetApprovals, useNft } from "@/lib/hooks";
 import { TbaOwnedNft } from "@/lib/types";
 import { getAddress } from "viem";
 import { TokenDetail } from "./TokenDetail";
+import { useRouter ,useParams} from 'next/navigation';
 import { HAS_CUSTOM_IMPLEMENTATION } from "@/lib/constants";
 import VoxFiled from '../vox'
+import DclContent from '../dcl'
+import {
+  getBagsDetail,
+  getBagsNum,
+  rmBabylonModel,
+} from "../../../../service";
 
 interface TokenParams {
   params: {
@@ -31,6 +42,19 @@ export default function Token({ params, searchParams }: TokenParams) {
   const { tokenId, contractAddress, chainId } = params;
   const [showTokenDetail, setShowTokenDetail] = useState(false);
   const chainIdNumber = parseInt(chainId);
+  const router = useParams();
+  const userouter = useRouter();
+
+  const [tokenboundAccountNum, setTokenboundAccountNum] = useState("");
+  const [title, setTitle] = useState("");
+  const [wearableType, setwearableType] = useState(null as any);
+  const [getCode, setGetCode] = useState(false);
+  const [popUp, setPopUp] = useState(false);
+  const [editNum, setEditNum] = useState("WalletConnect URI");
+  const [dataInfoList, setDataInfoList] = React.useState([] || null);
+  const [dataInfo, setDataInfo] = React.useState([] || null);
+
+
 
   const {
     data: nftImages,
@@ -51,7 +75,6 @@ export default function Token({ params, searchParams }: TokenParams) {
       const imagePromises = nftImages.map((src: string) => {
         return new Promise((resolve, reject) => {
           const image = new Image();
-          console.log(image,989);
           
           image.onload = resolve;
           image.onerror = reject;
@@ -70,8 +93,11 @@ export default function Token({ params, searchParams }: TokenParams) {
   }, [nftImages]);
 
   // Fetch nft's TBA
-  const { data: account } = useSWR(tokenId ? `/account/${tokenId}` : null, async () => {
-    const result = await getAccount(Number(tokenId), contractAddress, chainIdNumber);
+  const { data: account } = useSWR(router?.tokenId ? `/account/${tokenId}` : null, async () => {
+    
+    const result = await getAccount(Number(router?.tokenId), router?.contractAddress as any, chainIdNumber);
+   
+    
     return result.data;
   });
 
@@ -97,11 +123,12 @@ export default function Token({ params, searchParams }: TokenParams) {
   useEffect(() => {
     async function fetchNfts(account: string) {
       const [data, lensData] = await Promise.all([
+    
+     
         getNfts(chainIdNumber, account),
         getLensNfts(account),
       ]);
       if (data) {
-        console.log(data,33333);
         
         setNfts(data);
       }
@@ -111,6 +138,7 @@ export default function Token({ params, searchParams }: TokenParams) {
     }
 
     if (account) {
+
       fetchNfts(account);
     }
   }, [account, accountBytecode, chainIdNumber]);
@@ -141,13 +169,222 @@ export default function Token({ params, searchParams }: TokenParams) {
       }
     }
   }, [nfts, approvalData, lensNfts]);
-console.log(nftImages,'nftImages');
+
+
+
+const handleMint = React.useCallback(() => {
+  const getData = async () => {
+    try {
+      const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
+      // let wearableType =null;
+      // // console.log(tokenboundAccountNum, 333);
+      setDataInfo(response.ownedNfts);
+      if (response.ownedNfts.length !== 0) {
+        //         }else{
+        response.ownedNfts.map((item:any) => {
+          // setwearableType(item.tokenUri.raw);
+          if (wearableType === null) {
+            
+            if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
+              // wearableType='voxels'
+              setwearableType("Voxels");
+            } else if (
+              item.tokenUri.raw.includes("https://peer.decentraland.org")
+            ) {
+              setwearableType("Decentraland");
+            } else {
+              setwearableType("Other");
+            }
+            // // console.log(wearableType,222);
+          } else {
+            // // console.log(2333333);
+
+            if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
+              
+              if (wearableType !== "Voxels") {
+                // wearableType='Other'
+                setwearableType("Other");
+                
+                return;
+              }
+              
+            } else if (
+              item.tokenUri.raw.includes("https://peer.decentraland.org")
+            ) {
+              if (wearableType !== "Decentraland") {
+                setwearableType("Other");
+                return;
+              }
+
+            // } else {
+            //   if (wearableType !== "Other") {
+            //     return;
+            //   }
+            }
+          }
+        });
+
+
+      // } else {
+      //   setDataInfoList(null);
+      }
+
+      
+      // // console.log(dataInfo, 666);
+    } catch (error) {
+      // console.error(error);
+    }
+  };
+
+  getData();
+}, [wearableType,account]);
+
+const handleBag = React.useCallback(() => {
+  const getData = async () => {
+    // // console.log(router.query.tokenId);
+
+    try {
+      const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
+      const wearableTypeEach = response.tokenUri.raw;
+      // // console.log(wearableTypeEach,666);
+      // const substring = wearableTypeEach.substring(0, 28);
+      // setwearableType(response.tokenUri.raw);
+      // // console.log(substring,3333);
+
+      setTitle(response.title);
+      // // console.log(response, 'response');
+    } catch (error) {
+      // console.error(error);
+    }
+  };
+
+  getData();
+}, []);
+
+useEffect(() => {
+
+  if (router?.contractAddress && router?.tokenId) {
+    // 确保参数都存在并是字符串
+    const contractAddress = String(router?.contractAddress);
+    const tokenId = String(router?.tokenId);
+
+    // 使用模板字符串将参数连接起来
+    userouter?.replace(`/${contractAddress}/${tokenId}/${chainIdNumber}`);
+  }
+  if (router) {
+    handleMint();
+    handleBag();
+  }
+}, [account, handleMint,handleBag,dataInfoList, wearableType]);
+
+// useEffect(() => {
+//   if (router.query) {
+//     handleMint();
+//     handleBag();
+//   }
+// }, [router.query, tokenboundAccountNum, handleMint,handleBag,dataInfoList, wearableType]);
+
+const jumpToOpenC = (item:any) => {
+  // // console.log(item,'w22');
+  const idToken = item.id.tokenId;
+  // // console.log(idToken);
+  const decimalValue = parseInt(idToken, 16);
+  // // console.log(decimalValue,556);
+  // window.open(`https://opensea.io/assets/matic/${wearableType}/${decimalValue}`)
+  window.open(
+    `https://opensea.io/assets/matic/${item.contract.address}/${decimalValue}`
+  );
+};
 
   return (
-    <div className="h-screen w-screen bg-slate-100">
+    <div className="">
       <div className="max-w-screen relative mx-auto aspect-square max-h-screen overflow-hidden bg-white">
         <div className="relative h-full w-full">
-          {account && nftImages && nftMetadata && (
+        {wearableType==='Voxels'? (
+          <div style={{ marginTop: "20px" }}>
+            <VoxFiled />
+          </div>
+        ) : null}
+        {wearableType==='Decentraland' ? (
+          <div style={{ marginTop: "20px" }}>
+            <DclContent />
+          </div>
+        ) : null}
+         {wearableType==='Other'||wearableType===null? (
+          <>
+        <div
+                className={cn(
+                  "grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5",
+                  style.dataSourceCard
+                )}
+                id="eventData"
+              >
+                {dataInfoList === null ? (
+                  <>
+                    <p className={style.nothingInfo}>
+                      You don&apos;t have any wearable in this bag.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    {dataInfo.map((item:any) => {
+                      return (
+                        <div className={style.boxContent} key={item.id}>
+                          <img src={item.metadata.image} alt="" />
+                          <img
+                            alt="" 
+                            src="/images/Nomal.png"
+                            className={style.icon}
+                            onClick={() => {
+                              jumpToOpenC(item);
+                            }}
+                          ></img>
+                          <div className={style.worldCon}>
+                            {item.tokenUri.raw.includes(
+                              "https://www.cryptovoxels.com"
+                            ) ? (
+                              <>Voxels</>
+                            ) : null}
+                            {item.tokenUri.raw.includes(
+                              "https://peer.decentraland.org"
+                            ) ? (
+                              <>Decentraland</>
+                            ) : null}
+                            {item.tokenUri.raw.includes(
+                              "https://contracts.sandbox.game"
+                            ) ? (
+                              <>The Sandbox</>
+                            ) : null}
+                            {!(
+                              item.tokenUri.raw.includes(
+                                "https://www.cryptovoxels.com"
+                              ) ||
+                              item.tokenUri.raw.includes(
+                                "https://peer.decentraland.org"
+                              ) ||
+                              item.tokenUri.raw.includes(
+                                "https://contracts.sandbox.game"
+                              )
+                            ) ? (
+                              <>Other</>
+                            ) : (
+                              <></>
+                            )}
+                          </div>
+                          <div className={style.textCon}>
+                            <p className={style.idP1}>{item.metadata.name}</p>
+                            <p className={style.idP2}>
+                              {item.metadata.description}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </div>
+              </>   ):<></>}
+          {/* {account && nftImages && nftMetadata && (
             <TokenDetail
               isOpen={showTokenDetail}
               handleOpenClose={setShowTokenDetail}
@@ -157,35 +394,35 @@ console.log(nftImages,'nftImages');
               title={nftMetadata.title}
               chainId={chainIdNumber}
             />
-          )}
-          <div className="max-h-1080[px] relative h-full w-full max-w-[1080px]">
+          )} */}
+          {/* <div className="max-h-1080[px] relative h-full w-full max-w-[1080px]">
             {nftMetadataLoading ? (
               <div className="absolute left-[45%] top-[50%] z-10 h-20 w-20 -translate-x-[50%] -translate-y-[50%] animate-bounce">
                 <TbLogo />
               </div>
             ) : (
-              <>     <VoxFiled/></>
-              // <div
-              //   className={`grid w-full grid-cols-1 grid-rows-1 transition ${
-              //     imagesLoaded ? "" : "blur-xl"
-              //   }`}
-              // >
-              //   {/* {!isNil(nftImages) ? (
-              //     nftImages.map((image, i) => (
-              //       <img
-              //         key={i}
-              //         className="col-span-1 col-start-1 row-span-1 row-start-1 translate-x-0"
-              //         src={image}
-              //         alt="Nft image"
-              //       />
-              //     ))
-              //   ) : (
-              //     <></>
-              //   )} */}
+             
+              <div
+                className={`grid w-full grid-cols-1 grid-rows-1 transition ${
+                  imagesLoaded ? "" : "blur-xl"
+                }`}
+              >
+                {!isNil(nftImages) ? (
+                  nftImages.map((image, i) => (
+                    <img
+                      key={i}
+                      className="col-span-1 col-start-1 row-span-1 row-start-1 translate-x-0"
+                      src={image}
+                      alt="Nft image"
+                    />
+                  ))
+                ) : (
+                  <></>
+                )}
            
-              // </div>
+              </div>
             )}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import style from "./index.module.css";
 import ndarray from "ndarray";
-// import ndarray from 'https://cdn.jsdelivr.net/npm/ndarray@1.0.19/+esm'
 import ndarrayFill from "ndarray-fill";
 import aoMesher from "ao-mesher";
 import * as BABYLON from "babylonjs";
@@ -9,7 +8,8 @@ import "@babylonjs/loaders/glTF";
 import "babylonjs-loaders";
 import { getModelInfo,setModelInfo,getBagsDetail} from "../../../../service";
 // console.log(a,666666);
-import Router, { useRouter } from "next/router";
+// import Router, { useRouter } from "next/router";
+import { useRouter ,useParams} from 'next/navigation';
 // import avatarModel from './41.vox';
 // console.log(avatarModel,6666);
 
@@ -19,15 +19,8 @@ import vox from "vox.js";
 
 
 export default function VoxFiled() {
-// const router = useRouter();
+  const router = useParams();
 
-  // eslint-disable-next-line @next/next/no-sync-scripts
-  <>
-    {/* <script src="https://cdn.babylonjs.com/babylon.js"></script> */}
-    {/* <script src="https://cdn.babylonjs.com/loaders/babylonjs.loaders.min.js"></script> */}
-    {/* <script src="https://cdn.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script> */}
-    {/* <script src="https://cdn.jsdelivr.net/npm/vox.js@1.1.0/build/vox.min.js"></script> */}
-  </>;
   const [editNum, setEditNum] = useState(null);
   // const [editNumPoY, setEditNumPoY] = useState(null);
   // const [editNumPoX, setEditNumPoX] = useState(null);
@@ -60,13 +53,13 @@ export default function VoxFiled() {
   let found = false;
   let targetBone:any = null;
   // 在页面加载时发送消息
-  const all_last_rotation = React.useRef({});
-  let modelList = {};
+  const all_last_rotation:any = React.useRef({});
+  let modelList:any = {};
   // const uniqueId  = crypto.randomUUID();
-  const attachmentId = React.useRef(null);
+  const attachmentId = React.useRef('');
   const iframeRef = React.useRef(null);
 
-  let skeleton = null;
+  let skeleton:any = null;
   function num(value:any) {
     // console.log(value,'value');
     
@@ -74,6 +67,165 @@ export default function VoxFiled() {
     return t;
     // return t.toString() === value.toString() ? t : null;
   }
+
+  const get_vox_data = (requestConfig:any, voxMesh:any) => {
+    var parser = new vox.Parser();
+    
+    parser
+      .parse(
+        
+        // "https://www.voxels.com"+requestConfig.url
+          // "https://wearable.vercel.app/"+requestConfig.url.hash+".vox"
+          "https://wearable.vercel.app/"+requestConfig.voxHash+".vox"
+      )
+      .then(function (parsed:any) {
+        // console.log(parsed, "有没有");
+
+        let size = parsed.size;
+
+        size.x += 2;
+        size.y += 2;
+        size.z += 2;
+
+        let field = ndarray(new Uint16Array(size.x * size.y * size.z), [
+          size.x,
+          size.y,
+          size.z,
+        ]);
+        ndarrayFill(field, (x:any, y:any, z:any) => 0);
+
+        parsed.voxels.forEach((row:any) => {
+          let { x, y, z, colorIndex } = row;
+          field.set(x, y, z, colorIndex + (1 << 15));
+        });
+
+        const vertData = aoMesher(field);
+
+        let face = 0;
+        let i = 0;
+        // 大小
+        let s = 0.01;
+
+        const hue = 0;
+        const positions = [];
+        const indices = [];
+        const normals = [];
+        const colors = [];
+
+        // Identity function, use these to nudge the mesh as needed
+        const fx = (x:any) => x;
+        const fy = (y:any) => y;
+        const fz = (z:any) => z;
+
+        while (i < vertData.length) {
+          const textureIndex = vertData[i + 7];
+
+          // const color = new BABYLON.Color3(1, 1, 0)
+          // var a = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
+
+          // var b = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
+
+          // var c = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
+
+          // Face index
+          indices.push(face + 0, face + 2, face + 1);
+
+          const intensity = 0.5;
+          const offset = 0.4;
+          let color = new BABYLON.Color3(
+            parsed.palette[textureIndex].r / 255,
+            parsed.palette[textureIndex].g / 255,
+            parsed.palette[textureIndex].b / 255
+          );
+
+          colors.push(
+            color.r * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
+
+          colors.push(
+            color.r * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
+
+          colors.push(
+            color.r * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
+
+          face += 3;
+        }
+
+        requestConfig.positions = positions;
+// console.log(positions);
+
+        requestConfig.indices = indices;
+        requestConfig.colors = colors;
+        // return requestConfig
+        let {
+          positions: t,
+          indices: r,
+          colors: co,
+          colliderPositions: ca,
+          colliderIndices: cc,
+        } = requestConfig;
+        const vertexData = new BABYLON.VertexData();
+
+        vertexData.positions = t;
+        vertexData.indices = r;
+        vertexData.colors = co;
+        // console.log(t);
+        // console.log(r)
+        // console.log(co);
+        // BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+        // vertexData.normals = normals;
+
+        vertexData.applyToMesh(voxMesh);
+        // voxMesh.position.y = 0.926;
+        // voxMesh.position.y = 1.509;
+
+      
+
+
+        voxMesh.checkCollisions = false;
+        voxMesh.refreshBoundingInfo();
+        return voxMesh;
+      });
+    
+      // (window as any).get_vox_data = get_vox_data;
+
+  };
   useEffect(() => {
     const canvas = document.getElementById("renderCanvas");
     // console.log(canvas);
@@ -159,7 +311,6 @@ export default function VoxFiled() {
       costumeMaterial.blockDirtyMechanism = true;
       let material = costumeMaterial;
     //   console.log(material, "material3366666");
-    console.log(scene);
       BABYLON.SceneLoader.ImportMesh(
         null,
         `https://www.voxels.com/models/`,
@@ -168,7 +319,6 @@ export default function VoxFiled() {
         (meshes, particleSystems, skeletons) => {
           let costumeMesh, bodyMesh:any, skeletonRoot;
           costumeMesh = meshes[0];
-          console.log(costumeMesh);
           const costumeId = 1;
           costumeMesh.id = `costume/${costumeId}`;
           costumeMesh.visibility = 0;
@@ -216,7 +366,6 @@ export default function VoxFiled() {
           });
         }
       );
-console.log(scene,666);
 
       return scene;
     };
@@ -231,278 +380,231 @@ console.log(scene,666);
       engine.resize();
     });
 
+    async function onLoadCostume() {
+      // console.log(router.query.tokenID);
+// console.log(getModelInfo(19));
+      const getModelInfoData = getModelInfo(router?.tokenId)
+      
+      getModelInfoData.then(async(getModelInfoItem)=>{
+        if (JSON.stringify(getModelInfoItem.data) === '{}') {
+          console.log('错误');
+        }else{
+        const data = getModelInfoItem.data;
+        // const data = await response.json();
+  // console.log(data,'data');
+  // if(getModelInfoItem.data){
     
+  // }
+        // 在这里使用从JSON文件中读取到的数据
+        const attachments = data.attachments;
+  
+        for (let att  of attachments) {
+          // (window as any).droppedWearable = att;
+          windowVal['droppedWearable']= att
+          // (window as any).droppedWearable.token_id = att.token_id
+          windowVal['droppedWearable'].token_id= att.token_id
+            targetBone = att.bone;
+            attachmentId.current = att.uuid
+            all_last_rotation.current[attachmentId.current] = att.rotation
+            
+            // costume.attachments.push(att)
+            renderVoxModel();
+  
+        }
+        // onClick(null)
+        }
+      })
+     
+  }
+  function getWearableURL(droppedWearable:any) {
+    // ${chain_info[droppedWearable.chain_id]}
+    const hexValue = droppedWearable.voxHash;
+    // const decimalValue = parseInt(hexValue, 16);
+    // return `/c/v2/polygon/${
+    //   droppedWearable.collection_address
+    // }/${decimalValue}/vox`;
+    return `https://wearable.vercel.app/${hexValue}.vox`
+  } 
 
-    // onLoadCostume()
-    // 坐标向量
-    // const gizmoManager = get_GizmoManager();
-    // function get_GizmoManager() {
-    //     const gizmoManager = new BABYLON.GizmoManager(scene, 3.5);
-    //     gizmoManager.positionGizmoEnabled = true;
-    //     gizmoManager.rotationGizmoEnabled = true;
-    //     gizmoManager.scaleGizmoEnabled = false;
-  
-    //     gizmoManager.usePointerToAttachGizmos = false;
-    //     gizmoManager.boundingBoxGizmoEnabled = true;
-    //     if (
-    //       !gizmoManager.gizmos.positionGizmo ||
-    //       !gizmoManager.gizmos.rotationGizmo
-    //     )
-    //       throw new Error("gizmos not found");
-    //     gizmoManager.gizmos.positionGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.positionGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.positionGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-  
-    //     gizmoManager.gizmos.rotationGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.rotationGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.rotationGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-  
-    //     gizmoManager.gizmos.rotationGizmo.updateGizmoRotationToMatchAttachedMesh =
-    //       false;
-  
-    //     if (gizmoManager.gizmos.boundingBoxGizmo) {
-    //       gizmoManager.gizmos.boundingBoxGizmo.scaleRatio = 0.8;
-    //       gizmoManager.gizmos.boundingBoxGizmo.scaleBoxSize = 0.03;
-    //       gizmoManager.gizmos.boundingBoxGizmo.rotationSphereSize = 0;
-    //       gizmoManager.gizmos.boundingBoxGizmo.onScaleBoxDragEndObservable.add(
-    //         () => updateAllPositionValue(null)
-    //       );
-    //     }
-  
-    //     const position = document.getElementById("gizmo-position");
-    //     if (!position) throw new Error("positionGizmo not found");
-    //     position.addEventListener("click", () => {
-    //       gizmoManager.positionGizmoEnabled = true;
-    //       gizmoManager.rotationGizmoEnabled = false;
-    //       gizmoManager.boundingBoxGizmoEnabled = false;
-    //     });
-    //     const rotation = document.getElementById("gizmo-rotation");
-    //     if (!rotation) throw new Error("rotationGizmo not found");
-    //     rotation.addEventListener("click", () => {
-    //       gizmoManager.positionGizmoEnabled = false;
-    //       gizmoManager.rotationGizmoEnabled = true;
-    //       gizmoManager.boundingBoxGizmoEnabled = false;
-    //     });
-    //     const scale = document.getElementById("gizmo-scale");
-    //     if (!scale) throw new Error("scaleGizmo not found");
-    //     scale.addEventListener("click", () => {
-    //       if (voxMesh) {
-    //         last_rotation['x'] = voxMesh.rotation.x
-    //         last_rotation['y'] = voxMesh.rotation.y
-    //         last_rotation['z'] = voxMesh.rotation.z
-    //     }
-    //       gizmoManager.positionGizmoEnabled = false;
-    //       gizmoManager.rotationGizmoEnabled = false;
-    //       gizmoManager.boundingBoxGizmoEnabled = true;
-    //     });
-    //     gizmoManager.positionGizmoEnabled = true;
-    //     gizmoManager.rotationGizmoEnabled = false;
-    //     gizmoManager.boundingBoxGizmoEnabled = false;
-  
-    //     return gizmoManager;
-    //   }
+  const get_avatar = function () {
+    if (!scene) return null;
+    return scene.getMeshByName("avatar");
+  };
 
-    //   function updateAllPositionValue(type:any) {
-    //     const position_x = document.getElementById(
-    //       "position[x]"
-    //     ) as HTMLInputElement;
-    //     const position_y = document.getElementById(
-    //       "position[y]"
-    //     ) as HTMLInputElement;
-    //     const position_z = document.getElementById(
-    //       "position[z]"
-    //     ) as HTMLInputElement;
+  function renderVoxModel() {
+     
+    let droppedWearable = getDroppedWearable()
+
+    if(modelList[droppedWearable.gateway]){
+      // found = true;
+      return
+    }
+
+    const shaderMaterial = new BABYLON.StandardMaterial("wearable", scene);
+    shaderMaterial.emissiveColor.set(.3, .3, .3);
+    shaderMaterial.diffuseColor.set(1, 1, 1);
+    shaderMaterial.blockDirtyMechanism = true;
+
+   let wearable_url = getWearableURL(droppedWearable)
+
+    const requestConfig = {
+        renderJob: 1,
+        url: wearable_url,
+        token_id: droppedWearable.token_id,
+        voxHash:droppedWearable.voxHash
+    };
+
+    voxMesh = new BABYLON.Mesh("utils/vox-box", scene);
+    voxMesh.material = shaderMaterial;
+    voxMesh.isPickable = true;
+    voxMesh.checkCollisions = false;
+    voxMesh.gateway=droppedWearable.gateway
+    voxMesh.scaling.set(0.5, 0.5, 0.5);
+    const origin = new BABYLON.TransformNode("Node/wearable", scene);
+
+    voxMesh.setParent(origin);
+    origin.rotation.x = -Math.PI / 2;
+
+    const the_bone = bone(targetBone);
+    if (!the_bone) {
+        console.log('no Bone');
+        return
+    }
+    if (get_avatar()) {
+        origin.attachToBone(the_bone, get_avatar() as any);
+        last_rotation = {}
+        if (droppedWearable?.position && droppedWearable?.rotation && droppedWearable?.scaling) {
+            updateAllPositionValue('load_model_json')
+        } else {
+            updateAllPositionValue(null)
+        }
+        focus()
+        modelList[droppedWearable.gateway]=true
+        // "https://www.voxels.com/c/v2/polygon/0x1e3D804415dCbb7ceA3478f176e123562e09b514/155/vox"
+        // 将模型绕 y 轴旋转 180 度，使其正上方朝向 y 轴
+        // get vox data
+       get_vox_data(requestConfig, voxMesh)
+    }
+
+    voxMesh.uuid = attachmentId.current
+setVoxMeshState(voxMesh)
+}
+
+function bone(e:any) {
+      
+  if (!skeleton) return null;
+  const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
+
+  if (t == -1) {
+    console.error(`Bad bone name "${e}"`);
+    return null;
+  }
+  return skeleton.bones[t];
+}
+    onLoadCostume()
+   // 坐标向量
+    const gizmoManager = get_GizmoManager();
+    function get_GizmoManager() {
+        const gizmoManager = new BABYLON.GizmoManager(scene, 3.5);
+        gizmoManager.positionGizmoEnabled = true;
+        gizmoManager.rotationGizmoEnabled = true;
+        gizmoManager.scaleGizmoEnabled = false;
   
-    //     const rotation_x = document.getElementById(
-    //       "rotation[x]"
-    //     ) as HTMLInputElement;
-    //     const rotation_y = document.getElementById(
-    //       "rotation[y]"
-    //     ) as HTMLInputElement;
-    //     const rotation_z = document.getElementById(
-    //       "rotation[z]"
-    //     ) as HTMLInputElement;
+        gizmoManager.usePointerToAttachGizmos = false;
+        gizmoManager.boundingBoxGizmoEnabled = true;
+        if (
+          !gizmoManager.gizmos.positionGizmo ||
+          !gizmoManager.gizmos.rotationGizmo
+        )
+          throw new Error("gizmos not found");
+        gizmoManager.gizmos.positionGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.positionGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.positionGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
   
-    //     const scale_x = document.getElementById("scale[x]") as HTMLInputElement;
-    //     const scale_y = document.getElementById("scale[y]") as HTMLInputElement;
-    //     const scale_z = document.getElementById("scale[z]") as HTMLInputElement;
+        gizmoManager.gizmos.rotationGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.rotationGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.rotationGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
   
-    //     if (!voxMesh) {
-    //       position_x.value = (0.0).toString();
-    //       position_y.value = (0.0).toString();
-    //       position_z.value = (0.0).toString();
+        gizmoManager.gizmos.rotationGizmo.updateGizmoRotationToMatchAttachedMesh =
+          false;
   
-    //       rotation_x.value = (0.0).toString();
-    //       rotation_y.value = (0.0).toString();
-    //       rotation_z.value = (0.0).toString();
+        if (gizmoManager.gizmos.boundingBoxGizmo) {
+          gizmoManager.gizmos.boundingBoxGizmo.scaleRatio = 0.8;
+          gizmoManager.gizmos.boundingBoxGizmo.scaleBoxSize = 0.03;
+          gizmoManager.gizmos.boundingBoxGizmo.rotationSphereSize = 0;
+          gizmoManager.gizmos.boundingBoxGizmo.onScaleBoxDragEndObservable.add(
+            () => updateAllPositionValue(null)
+          );
+        }
   
-    //       scale_x.value = (0.5).toString();
-    //       scale_y.value = (0.5).toString();
-    //       scale_z.value = (0.5).toString();
-    //       scale_z.value = 0.5.toString();
-    //     } else if (type === 'change_model_mesh') {
+        gizmoManager.positionGizmoEnabled = true;
+        gizmoManager.rotationGizmoEnabled = false;
+        gizmoManager.boundingBoxGizmoEnabled = false;
   
-    //         position_x.value = voxMesh.position.x.toFixed(2);
-    //         position_y.value = voxMesh.position.y.toFixed(2);
-    //         position_z.value = voxMesh.position.z.toFixed(2);
+        return gizmoManager;
+      }
+
+      function updateAllPositionValue(type:any) {
+     
   
-    //         scale_x.value = voxMesh.scaling.x.toFixed(2);
-    //         scale_y.value = voxMesh.scaling.y.toFixed(2);
-    //         scale_z.value = voxMesh.scaling.z.toFixed(2);
-    //         voxMesh.rotationQuaternion = null;
-    //         // rotation_x.value = voxMesh.rotation.x = last_rotation['x'] 
-    //         // rotation_y.value = voxMesh.rotation.y = last_rotation['y']
-    //         // rotation_z.value = voxMesh.rotation.z = last_rotation['z']
-    //         rotation_x.value  = last_rotation[0];
-    //         rotation_y.value  = last_rotation[1];
-    //         rotation_z.value  = last_rotation[2];
+        if (!voxMesh) {
+        
+        } else if (type === 'change_model_mesh') {
+  
+         
+        } else {
+         
+          if (type === 'load_model_json') {
+          let  the_wearable = getDroppedWearable()
+  
+            voxMesh.position.x = parseFloat(the_wearable.position[0]);
+            voxMesh.position.y = parseFloat(the_wearable.position[1]);
+            voxMesh.position.z = parseFloat(the_wearable.position[2]);
+  
+            voxMesh.rotation.x = parseFloat(the_wearable.rotation[0]);
+            voxMesh.rotation.y = parseFloat(the_wearable.rotation[1]);
+            voxMesh.rotation.z = parseFloat(the_wearable.rotation[2]);
+  
+            voxMesh.scaling.x = parseFloat(the_wearable.scaling[0]);
+            voxMesh.scaling.y = parseFloat(the_wearable.scaling[1]);
+            voxMesh.scaling.z = parseFloat(the_wearable.scaling[2]);
+        }
+       
+        voxMesh.rotationQuaternion = null;
+  
+     
+        if (!gizmoManager.boundingBoxGizmoEnabled) {
+                last_rotation = {}
+            }
+  
     
-    //         voxMesh.rotation.x=parseFloat(last_rotation[0])
-    //         voxMesh.rotation.y=parseFloat(last_rotation[1])
-    //         voxMesh.rotation.z=parseFloat(last_rotation[2])
-    //     } else {
-    //       // const rot = e=>Math.round(e * 1e3 * 180 / Math.PI) / 1e3;
-    //       // const po_sc = e=>Math.round(e * 1e3) / 1e3;
-  
-    //       // [position_x.value, position_y.value, position_z.value] = voxMesh.position.asArray().map(po_sc);
-    //       // [rotation_x.value, rotation_y.value, rotation_z.value] = voxMesh.position.asArray().map(po_sc);
-    //       // [scale_x.value, scale_y.value, scale_z.value] = voxMesh.position.asArray().map(po_sc);
-    //       // position_x.value = voxMesh.position.x.toFixed(2);
-    //       // position_y.value = voxMesh.position.y.toFixed(2);
-    //       // position_z.value = voxMesh.position.z.toFixed(2);
-    //       // setEditNumPoY(voxMesh.position.y.toFixed(2))
-    //       // setEditNumPoX(voxMesh.position.x.toFixed(2))
-    //       // setEditNumPoZ(voxMesh.position.z.toFixed(2))
-  
-    //       // rotation_x.value = voxMesh.rotation.x.toFixed(2);
-    //       // rotation_y.value = voxMesh.rotation.y.toFixed(2);
-    //       // rotation_z.value = voxMesh.rotation.z.toFixed(2);
-  
-    //       // setEditNumRoX(voxMesh.rotation.x.toFixed(2))
-    //       // setEditNumRoY(voxMesh.rotation.y.toFixed(2))
-    //       // setEditNumRoZ(voxMesh.rotation.z.toFixed(2))
-    //       // scale_x.value = voxMesh.scaling.x.toFixed(2);
-    //       // scale_y.value = voxMesh.scaling.y.toFixed(2);
-    //       // scale_z.value = voxMesh.scaling.z.toFixed(2);
-    //       // setEditNumSaX(voxMesh.scaling.x.toFixed(2))
-    //       // setEditNumSaY(voxMesh.scaling.y.toFixed(2))
-    //       // setEditNumSaZ(voxMesh.scaling.z.toFixed(2))
-    //       // if (!type) {
-    //       //   // 更新接口数据坐标
-    //       //   updateAttachment();
-    //       // }
-    //       if (type === 'load_model_json') {
-    //       let  the_wearable = getDroppedWearable()
-  
-    //         voxMesh.position.x = parseFloat(the_wearable.position[0]);
-    //         voxMesh.position.y = parseFloat(the_wearable.position[1]);
-    //         voxMesh.position.z = parseFloat(the_wearable.position[2]);
-  
-    //         voxMesh.rotation.x = parseFloat(the_wearable.rotation[0]);
-    //         voxMesh.rotation.y = parseFloat(the_wearable.rotation[1]);
-    //         voxMesh.rotation.z = parseFloat(the_wearable.rotation[2]);
-  
-    //         voxMesh.scaling.x = parseFloat(the_wearable.scaling[0]);
-    //         voxMesh.scaling.y = parseFloat(the_wearable.scaling[1]);
-    //         voxMesh.scaling.z = parseFloat(the_wearable.scaling[2]);
-    //     }
-    //     position_x.value = voxMesh.position.x.toFixed(2);
-    //     position_y.value = voxMesh.position.y.toFixed(2);
-    //     position_z.value = voxMesh.position.z.toFixed(2);
-  
-    //     scale_x.value = voxMesh.scaling.x.toFixed(2);
-    //     scale_y.value = voxMesh.scaling.y.toFixed(2);
-    //     scale_z.value = voxMesh.scaling.z.toFixed(2);
-    //     voxMesh.rotationQuaternion = null;
-  
-    //     if ('x' as any  in last_rotation){
-    //         rotation_x.value  = voxMesh.rotation.x = parseFloat(last_rotation['x']).toFixed(2) ;
-    //     }else{
-    //         rotation_x.value = voxMesh.rotation.x.toFixed(2);
-    //     }
-  
-    //     if ('y' as any  in last_rotation){
-    //         rotation_y.value = voxMesh.rotation.y = parseFloat(last_rotation['y']).toFixed(2);
-    //     }else{
-    //         rotation_y.value = voxMesh.rotation.y.toFixed(2);
-    //     }
-  
-    //     if ('z' as any  in last_rotation){
-    //         rotation_z.value = voxMesh.rotation.z = parseFloat(last_rotation['z']).toFixed(2);
-    //     }else{
-    //         rotation_z.value = voxMesh.rotation.z.toFixed(2);
-    //     }
-  
-    //     if (!gizmoManager.boundingBoxGizmoEnabled) {
-    //             last_rotation = {}
-    //         }
-  
-    //     if (!type) {
-    //         updateAttachment()
-    //     }
-    //     }
-    //      setEditNumPo((prevEditNumPo:any) => ({
-    //       ...prevEditNumPo,
-    //       x:voxMesh? voxMesh.position.x.toFixed(2):0,
-    //     }));
-    //     setEditNumPo((prevEditNumPo:any) => ({
-    //       ...prevEditNumPo,
-    //       y:voxMesh? voxMesh.position.y.toFixed(2):0,
-    //     }));
-    //     setEditNumPo((prevEditNumPo:any) => ({
-    //       ...prevEditNumPo,
-    //       z: voxMesh?voxMesh.position.z.toFixed(2):0,
-    //     }));
-    //     const refValueX = voxMesh?.rotation.x; // 示例字符串值
-    //        const refValueY = voxMesh?.rotation.y; // 示例字符串值
-    //        const refValueZ = voxMesh?.rotation.z; // 示例字符串值
-    //     const fixedValueX = parseFloat(refValueX).toFixed(2);
-    //     const fixedValueY = parseFloat(refValueY).toFixed(2);
-    //     const fixedValueZ = parseFloat(refValueZ).toFixed(2);
+        }
+        
+        const refValueX = voxMesh?.rotation.x; // 示例字符串值
+           const refValueY = voxMesh?.rotation.y; // 示例字符串值
+           const refValueZ = voxMesh?.rotation.z; // 示例字符串值
+        const fixedValueX = parseFloat(refValueX).toFixed(2);
+        const fixedValueY = parseFloat(refValueY).toFixed(2);
+        const fixedValueZ = parseFloat(refValueZ).toFixed(2);
        
         
-    //        setEditNumRoX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-             
-    //          x:voxMesh? fixedValueX:0 ,
-    //          }));
-    //         setEditNumRoX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-    //          y: voxMesh? fixedValueY:0,
-    //          }));
-    //         setEditNumRoX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-    //          z: voxMesh? fixedValueZ:0,
-    //          }));
+      }
   
-   
-    //       setEditNumSaX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-    //          x: voxMesh?voxMesh.scaling.x.toFixed(2):0,
-    //         }));
-    //       setEditNumSaX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-    //          y: voxMesh?voxMesh.scaling.y.toFixed(2):0,
-    //         }));
-    //       setEditNumSaX((prevEditNumPo:any) => ({
-    //          ...prevEditNumPo,
-    //          z:voxMesh? voxMesh.scaling.z.toFixed(2):0,
-    //         }));
-    //   }
     },[])
-        // 获取 拖放的wearable
+
+    //     // 获取 拖放的wearable
     function getDroppedWearable() {
         // let droppedWearableValue = window["droppedWearable"];
         let droppedWearableValue = windowVal["droppedWearable"];
@@ -511,198 +613,12 @@ console.log(scene,666);
           : null;
       }
 
-      function updateAttachment() {
-        if (!voxMesh) {
-            console.log('no voxMesh');
-            return
-        }
-        
-        
-        // if (costume.attachments)
-        console.log(costume.attachments);
-        
-    //         costume.attachments.forEach((t => {
-          
-    //             if (t.uuid == attachmentId.current) {
-    //                 t.position = [voxMesh.position.x.toFixed(2), voxMesh.position.y.toFixed(2), voxMesh.position.z.toFixed(2)]
-    //                 t.rotation = [parseFloat(voxMesh.rotation.x).toFixed(2), parseFloat(voxMesh.rotation.y).toFixed(2), parseFloat(voxMesh.rotation.z).toFixed(2)]
-    
-    //                 // t.rotation = [voxMesh.rotation.x.toFixed(2), voxMesh.rotation.y.toFixed(2), voxMesh.rotation.z.toFixed(2)]
-    //                 t.scaling = [parseFloat(voxMesh.scaling.x).toFixed(2), parseFloat(voxMesh.scaling.y).toFixed(2), parseFloat(voxMesh.scaling.z).toFixed(2)]
-    //                 all_last_rotation.current[attachmentId.current] = t.rotation
-    // // console.log(costume);
-    // const metaCatAtk = window.localStorage.getItem("METACAT_atk");
-    // // console.log(metaCatAtk,22222);
-    
-    //                 // console.log(setModelInfo(metaCatAtk,costume));
-                    
-    //                 setModelInfo(metaCatAtk,costume)
-    //                 return true
-    //             }
-    //         }
-    //         ));
-    }
- 
-    const updatePosition =(type:any, index:any, value:any) => {
-   
-        voxMesh=voxMeshState;
-        
-        if (!voxMesh) {
-          console.log("voxMesh is Null");
-          return;
-        }
-        if (type === "position") {
-          switch (index) {
-            case 0:
-              voxMesh.position.x = num(value);
-              break;
-            case 1:
-              voxMesh.position.y = num(value);
-              break;
-            case 2:
-              voxMesh.position.z = num(value);
-              break;
-          }
-        } else if (type === "rotation") {
-          switch (index) {
-            case 0:
-              voxMesh.rotation.x = num(value)
-              last_rotation['x'] = voxMesh.rotation.x
-              break
-          case 1:
-              voxMesh.rotation.y = num(value)
-              last_rotation['y'] = voxMesh.rotation.y
-              break
-          case 2:
-              voxMesh.rotation.z = num(value)
-              last_rotation['z'] = voxMesh.rotation.z
-              break
-          }
-        } else if (type === "scale") {
-          // switch (index) {
-          //   case 0:
-          //     voxMesh.scaling.x = num(value);
-          //     break;
-          //   case 1:
-          //     voxMesh.scaling.y = num(value);
-          //     break;
-          //   case 2:
-          //     voxMesh.scaling.z = num(value);
-          //     break;
-          // }
-          const scale_x = document.getElementById("scale[x]") as any;
-          const scale_y = document.getElementById("scale[y]")as any;
-          const scale_z = document.getElementById("scale[z]")as any;
-          // voxMesh.scaling.set(num(scale_x.value), num(scale_y.value), num(scale_z.value))
-          // console.log(voxMesh.scaling.x);
-          // return
-          
-          voxMesh.scaling.x = num(scale_x.value)
-          voxMesh.scaling.y = num(scale_y.value)
-          voxMesh.scaling.z = num(scale_z.value)
-    
-          voxMesh.rotationQuaternion = null;
-          const rotation_x = document.getElementById(
-            "rotation[x]"
-          ) as HTMLInputElement;
-          const rotation_y = document.getElementById(
-            "rotation[y]"
-          ) as HTMLInputElement;
-          const rotation_z = document.getElementById(
-            "rotation[z]"
-          ) as HTMLInputElement;
-          voxMesh.rotation.x = parseFloat(rotation_x.value);
-          voxMesh.rotation.y = parseFloat(rotation_y.value);
-          voxMesh.rotation.z = parseFloat(rotation_z.value);
-          // last_rotation['x'] = voxMesh.rotation.x
-          // last_rotation['y'] = voxMesh.rotation.y
-          // last_rotation['z'] = voxMesh.rotation.z
-          last_rotation[0] = voxMesh.rotation.x;
-          last_rotation[1] = voxMesh.rotation.y;
-          last_rotation[2] = voxMesh.rotation.z;
-        }
-    
-        
-        
-        updateAttachment();
-      };
-
-
-      const onChangeEdiumY =(event:any) => {
-        // setEditNumPoY(event.target.value);
-        setEditNumPo((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          y: event.target.value,
-        }));
-      };
-      const onChangeEdiumX = (event:any) => {
-        // setEditNumPoX(event.target.value);
-        setEditNumPo((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          x: event.target.value,
-        }));
-      };
-      const onChangeEdiumZ = (event:any) => {
-        // setEditNumPoZ(event.target.value);
-        setEditNumPo((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          z: event.target.value,
-        }));
-      };
-      const onChangeEdiumRoX = (event:any) => {
-        // setEditNumRoX(event.target.value);
-        setEditNumRoX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          x: event.target.value,
-        }));
-      };
-      const onChangeEdiumRoY = (event:any) => {
-       
-        setEditNumRoX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          y: event.target.value,
-        }));
-      };
-      const onChangeEdiumRoZ = (event:any) => {
-        // setEditNumRoZ(event.target.value);
-        setEditNumRoX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          z: event.target.value,
-        }));
-      };
-      const onChangeEdiumSaX = (event:any) => {
-        // setEditNumSaX(event.target.value);
-        setEditNumSaX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          x: event.target.value,
-        }));
-      };
-      const onChangeEdiumSaY = (event:any) => {
-        // setEditNumSaY(event.target.value);
-        setEditNumSaX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          y: event.target.value,
-        }));
-      };
-      const onChangeEdiumSaZ = (event:any) => {
-        // setEditNumSaZ(event.target.value);
-        setEditNumSaX((prevEditNumPo:any) => ({
-          ...prevEditNumPo,
-          z: event.target.value,
-        }));
-      };
-    
-
   return (
     <>
-     {/* <iframe
-      src="https://iframe-model-new.vercel.app/"
-      ref={iframeRef}
-    ></iframe> */}
+   
       <div
         id="gizmos"
         className="active"
-        style={{ position: "relative", }}
       >
         <canvas id="renderCanvas" className={style.canvas}></canvas>
         {/* <div style={{ position: "absolute", top: "10px" ,display:"none"}}>

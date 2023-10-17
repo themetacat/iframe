@@ -33,3 +33,195 @@ margin-right: 10px;
 cursor: pointer;
 border-radius: 10px;
 }
+
+
+.page{
+    width: 100%;
+    height: 100vh;
+}
+.page1{
+    width: 100%;
+    height: 100vh;
+}
+.page1::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); 
+  z-index: 1; 
+}
+.container{
+  height: 100vh;
+    /* width: 100vw; */
+    background-color: rgba(0,0,0,0.8);
+padding-top: 20px;
+    
+}
+.supply{
+  display: block;
+}
+.titleBox{
+    width: 1200px;
+    margin: auto;
+    font-size: 30px;
+    text-align: center;
+    font-weight: 700;
+    color: #fff;
+}
+.dataSourceCard{
+    width: 1200px;
+    margin: auto;
+    display: grid;
+    padding-top: 20px;
+    /* height: 300px; */
+    gap: 1.25rem;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+  .boxContent{
+    width: 270px;
+    height: 340px;
+    background-color: black;
+    border-radius: 10px;
+    color: #fff;
+    padding: 15px;
+    position: relative;
+  }
+  .icon{
+    width: 23.53px;
+    height: 24.12px;
+    border-radius: 20px;
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+  .btnAccount{
+    width: 150px;
+    color: #4d4d50;
+    height: 30px;
+    background-color: #fff;
+    margin-left: 20px;
+    text-align: center;
+    cursor: pointer;
+    border-radius:5px;
+  }
+  .worldCon{
+    position: absolute;
+    top: 15px;
+    left: 13px;
+    color: #fff;
+    font-size: 12px;
+    font-family: PingFang SC;
+    font-weight: 500;
+    padding: 3px 20px 3px 10px;
+    background: rgba(0, 0, 0, 1);
+    opacity: 50%;
+    border-radius: 8px 0px 8px 0px;
+    text-align: center;
+    line-height: 30px;
+  }
+  .boxContent img{
+    border-radius: 10px 10px 0px 0px;
+  }
+  .textCon{
+margin-top: 10px;
+}
+  .idP1{
+font-size: 16px;
+font-weight: 600;
+  }
+  .idP2{
+    font-size: 12px;
+    font-weight: 400;
+    margin-top: 5px;
+    width: 240px;
+    overflow: hidden;
+   white-space: nowrap;
+  text-overflow: ellipsis;
+  }
+  .idP3{
+    margin-top: 5px;
+    color: #4d4d50;
+  }
+.cont{
+    margin: 0 auto;
+    width: 1200px;
+    color: #fff;
+}
+  .idNum{
+
+  }
+  .TbaAdd{
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .totalNum{
+    margin-top: 20px;
+    font-size: 20px;
+    font-family: 700;
+    color: #9d9d9e;
+  }
+  .nothingInfo{
+    width: 100vw;
+    margin-left: -132%;
+    text-align: center;
+    color: #515151;
+    font-size: 26px;
+font-weight: 600;
+line-height: 300px;
+  }
+  
+.popUp{
+  width: 450px;
+  height: 520px;
+  background-color: #fff;
+  position: absolute;
+  left: 40%;
+  top: 30%;
+  font-size: 18px;
+  padding: 30px;
+  border-radius: 10px;
+  z-index: 999;
+}
+.popUp p {
+  margin-top: 10px;
+}
+.p1{
+  color: #644cf7;
+  font-size: 25px;
+  font-weight: 800;
+}
+.p2{
+  color: #d4d4d4;
+  font-weight: 600;
+}
+.spanCo{
+  color: #000000;
+  font-weight: 600;
+}
+.conBttn{
+  width: 100%;
+  background-color: #000000;
+  color: #fff;
+  text-align: center;
+  height: 40px;
+  line-height: 40px;
+}
+.numIn{
+  margin-top: 15px;
+  margin-bottom: 15px;
+  border: 1px solid #111111;
+  width: 100%;
+  height: 30px;
+  color: #4d4d50;
+}
+.conRendImg{
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  right: 20px;
+  top: 20px;
+}
