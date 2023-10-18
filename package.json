@@ -28,6 +28,7 @@
     "framer-motion": "^10.12.16",
     "graphql": "^16.7.1",
     "graphql-request": "^6.1.0",
+    "http-proxy-middleware": "^2.0.6",
     "lodash": "^4.17.21",
     "ndarray": "^1.0.19",
     "ndarray-fill": "^1.0.2",
