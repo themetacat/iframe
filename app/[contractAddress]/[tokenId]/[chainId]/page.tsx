@@ -133,7 +133,7 @@ export default function Token({ params, searchParams }: TokenParams) {
     async function fetchNfts(account: string) {
       console.log(account,'有沒有!!!!!222222')
       const [data, lensData] = await Promise.all([
-        getNfts(chainIdNumber, account),
+        getNfts(chainIdNumber, '0x739fA75A4d092f339118b4bcde9E976D72D878d8'),
         getLensNfts(account),
       ]);
       if (data) {

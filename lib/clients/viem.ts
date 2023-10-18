@@ -11,13 +11,10 @@ export const getPublicClient = (chainId: number) => {
     chain: chain,
     transport: http(),
   });
-  
-  console.log(chainId,111)
-  console.log(chain,publicClient,222)
   return publicClient
 }
 
-export const publicClient = getPublicClient(137);
+export const publicClient = getPublicClient(1);
 
 const transport = http(providerEndpoint);
 
