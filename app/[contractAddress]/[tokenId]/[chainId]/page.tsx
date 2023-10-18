@@ -98,9 +98,9 @@ export default function Token({ params, searchParams }: TokenParams) {
   // Fetch nft's TBA
   const { data: account } = useSWR(router?.tokenId ? `/account/${tokenId}` : null, async () => {
     
-    const result = await getAccount(Number(router?.tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358 ','0',router?.contractAddress as any, chainIdNumber);
+    const result = await getAccount(Number(router?.tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358','0',router?.contractAddress as any, chainIdNumber);
    
-    console.log(getAccount(8,'0x2d25602551487c3f3354dd80d76d54383a243358 ','0','0x7524194dfcf68820006891d5d5810065f233a0b8',137));
+    console.log(getAccount(tokenId,'0x2d25602551487c3f3354dd80d76d54383a243358','0','0x7524194dfcf68820006891d5d5810065f233a0b8',137));
     console.log(router?.tokenId,router?.contractAddress,chainIdNumber);
     
     return result.data;
