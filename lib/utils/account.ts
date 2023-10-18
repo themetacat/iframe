@@ -57,6 +57,7 @@ export async function getAccount(
       functionName: "account",
       args: [implementationAddress, String(chainId), contractAddress, tokenId, salt],
     })) as string;
+console.log(response,98754);
 
     return { data: response };
   } catch (err) {
