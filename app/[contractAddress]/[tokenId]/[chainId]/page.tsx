@@ -180,7 +180,6 @@ export default function Token({ params, searchParams }: TokenParams) {
   }, [nfts, approvalData, lensNfts]);
 
 
-
 const handleMint = React.useCallback(() => {
   const getData = async () => {
     try {

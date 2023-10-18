@@ -58,8 +58,6 @@ export async function getAccount(
       args: [implementationAddress, String(chainId), contractAddress, tokenId, salt],
     })) as string;
 
-console.log(tokenId,contractAddress,chainId,'接口处！！',tokenboundAddress);
-
     return { data: response };
   } catch (err) {
     console.error(err);
