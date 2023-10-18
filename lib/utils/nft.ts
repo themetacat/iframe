@@ -9,7 +9,6 @@ export async function getNfts(chainId: number, account: string) {
     const response = await alchemy.nft.getNftsForOwner(account, {
       orderBy: NftOrdering.TRANSFERTIME,
     });
-console.log(chainId,account);
 
     if (!response.ownedNfts) {
       return [];

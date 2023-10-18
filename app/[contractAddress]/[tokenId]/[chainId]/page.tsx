@@ -100,8 +100,7 @@ export default function Token({ params, searchParams }: TokenParams) {
     
     const result = await getAccount(Number(router?.tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358','0',router?.contractAddress as any, chainIdNumber);
    
-    console.log(getAccount(tokenId,'0x2d25602551487c3f3354dd80d76d54383a243358','0','0x7524194dfcf68820006891d5d5810065f233a0b8',137));
-    console.log(router?.tokenId,router?.contractAddress,chainIdNumber);
+   
     
     return result.data;
   });
@@ -131,7 +130,6 @@ export default function Token({ params, searchParams }: TokenParams) {
   // fetch nfts inside TBA
   useEffect(() => {
     async function fetchNfts(account: string) {
-      console.log(account,'有沒有!!!!!222222')
       const [data, lensData] = await Promise.all([
         getNfts(chainIdNumber, account),
         getLensNfts(account),
@@ -183,7 +181,6 @@ export default function Token({ params, searchParams }: TokenParams) {
 const handleMint = React.useCallback(() => {
   const getData = async () => {
     try {
-      console.log(account,5568588);
     
       const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
       // let wearableType =null;
@@ -310,7 +307,8 @@ const jumpToOpenC = (item:any) => {
   return (
     <div className="">
       <div className="max-w-screen relative mx-auto aspect-square max-h-screen overflow-hidden bg-white">
-        <div className="relative h-full w-full">
+      <VoxFiled />
+        {/* <div className="relative h-full w-full">
         {wearableType==='Voxels'? (
           <div style={{ marginTop: "20px" }}>
             <VoxFiled />
@@ -395,46 +393,8 @@ const jumpToOpenC = (item:any) => {
                 )}
               </div>
               </>   ):<></>}
-          {/* {account && nftImages && nftMetadata && (
-            <TokenDetail
-              isOpen={showTokenDetail}
-              handleOpenClose={setShowTokenDetail}
-              approvalTokensCount={approvalData?.filter((item) => item.hasApprovals).length}
-              account={account}
-              tokens={tokens}
-              title={nftMetadata.title}
-              chainId={chainIdNumber}
-            />
-          )} */}
-          {/* <div className="max-h-1080[px] relative h-full w-full max-w-[1080px]">
-            {nftMetadataLoading ? (
-              <div className="absolute left-[45%] top-[50%] z-10 h-20 w-20 -translate-x-[50%] -translate-y-[50%] animate-bounce">
-                <TbLogo />
-              </div>
-            ) : (
-             
-              <div
-                className={`grid w-full grid-cols-1 grid-rows-1 transition ${
-                  imagesLoaded ? "" : "blur-xl"
-                }`}
-              >
-                {!isNil(nftImages) ? (
-                  nftImages.map((image, i) => (
-                    <img
-                      key={i}
-                      className="col-span-1 col-start-1 row-span-1 row-start-1 translate-x-0"
-                      src={image}
-                      alt="Nft image"
-                    />
-                  ))
-                ) : (
-                  <></>
-                )}
-           
-              </div>
-            )}
-          </div> */}
-        </div>
+      
+        </div> */}
       </div>
     </div>
   );

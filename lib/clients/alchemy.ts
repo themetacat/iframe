@@ -10,7 +10,6 @@ export const getAlchemy = (chainId: number) => {
     network,
   };
   const alchemy = new Alchemy(config);
-  console.log(alchemy,11233);
   return alchemy;
 };
 

@@ -6,8 +6,7 @@ const providerEndpoint = process.env.NEXT_PUBLIC_PROVIDER_ENDPOINT || "";
 
 export const getPublicClient = (chainId: number) => {
   const chain = getViemNetwork(chainId)
-  console.log(chainId,65698);
-  console.log(chain,'chain');
+
   
   const publicClient = createPublicClient({
     chain: chain,

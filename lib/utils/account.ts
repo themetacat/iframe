@@ -52,7 +52,6 @@ export async function getAccount(
   contractAddress: string,
   chainId: number
 ): Promise<GetAccount> {
-  console.log(tokenId);
   
   try {
     const publicClient = getPublicClient(chainId);
@@ -62,8 +61,7 @@ export async function getAccount(
       functionName: "account",
       args: [implementationAddress, String(chainId), contractAddress, tokenId, salt],
     })) as string;
-console.log(response,98754);
-console.log(implementationAddress, String(chainId), contractAddress, tokenId, salt);
+
 
     return { data: response };
   } catch (err) {
