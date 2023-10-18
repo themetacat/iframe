@@ -95,6 +95,7 @@ export default function Token({ params, searchParams }: TokenParams) {
     async function fetchNfts(account: string) {
       const [data, lensData] = await Promise.all([
         getNfts(CHAIN_ID, account),
+     
         getLensNfts(account),
       ]);
 

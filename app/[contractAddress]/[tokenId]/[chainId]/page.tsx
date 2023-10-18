@@ -131,6 +131,7 @@ export default function Token({ params, searchParams }: TokenParams) {
   // fetch nfts inside TBA
   useEffect(() => {
     async function fetchNfts(account: string) {
+      console.log(account,'有沒有!!!!!222222')
       const [data, lensData] = await Promise.all([
         getNfts(chainIdNumber, account),
         getLensNfts(account),
