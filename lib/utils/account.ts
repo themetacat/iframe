@@ -46,6 +46,8 @@ interface GetAccount {
 
 export async function getAccount(
   tokenId: number,
+  implementationAddress:any,
+  salt:any,
   contractAddress: string,
   chainId: number
 ): Promise<GetAccount> {
@@ -58,6 +60,7 @@ export async function getAccount(
       args: [implementationAddress, String(chainId), contractAddress, tokenId, salt],
     })) as string;
 console.log(response,98754);
+console.log(implementationAddress, String(chainId), contractAddress, tokenId, salt);
 
     return { data: response };
   } catch (err) {

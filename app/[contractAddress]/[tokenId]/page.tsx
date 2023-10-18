@@ -69,7 +69,7 @@ console.log(5555666666666);
 
   // Fetch nft's TBA
   const { data: account } = useSWR(tokenId ? `/account/${tokenId}` : null, async () => {
-    const result = await getAccount(Number(tokenId), contractAddress, CHAIN_ID);
+    const result = await getAccount(Number(tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358 ','0',contractAddress, CHAIN_ID);
     return result.data;
   });
 

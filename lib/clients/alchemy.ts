@@ -2,16 +2,15 @@ import { Alchemy, Network } from "alchemy-sdk";
 import getAlchemyNetwork from "../utils/getAlchemyNetwork";
 
 export const getAlchemy = (chainId: number) => {
-  const network = getAlchemyNetwork(chainId);
-console.log(chainId,11233);
-console.log(network,99999);
+  const network = getAlchemyNetwork(137);
+
 
   const config = {
     apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
     network,
   };
   const alchemy = new Alchemy(config);
-  
+  console.log(alchemy,11233);
   return alchemy;
 };
 
