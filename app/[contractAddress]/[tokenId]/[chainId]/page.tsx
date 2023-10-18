@@ -18,6 +18,8 @@ import { useRouter ,useParams} from 'next/navigation';
 import { HAS_CUSTOM_IMPLEMENTATION } from "@/lib/constants";
 import VoxFiled from '../vox'
 import DclContent from '../dcl'
+import { TokenboundClient } from "@tokenbound/sdk";
+import Web3 from "web3";
 import {
   getBagsDetail,
   getBagsNum,
@@ -44,6 +46,7 @@ export default function Token({ params, searchParams }: TokenParams) {
   const chainIdNumber = parseInt(chainId);
   const router = useParams();
   const userouter = useRouter();
+
 
   const [tokenboundAccountNum, setTokenboundAccountNum] = useState("");
   const [title, setTitle] = useState("");
@@ -104,7 +107,11 @@ export default function Token({ params, searchParams }: TokenParams) {
   // Get nft's TBA account bytecode to check if account is deployed or not
   const { data: accountBytecode } = useSWR(
     account ? `/account/${account}/bytecode` : null,
-    async () => rpcClient.getBytecode({ address: account as `0x${string}` })
+    
+    async () => rpcClient.getBytecode({ address: account as `0x${string}` 
+  })
+
+
   );
 
   const accountIsDeployed = accountBytecode && accountBytecode?.length > 2;
@@ -123,13 +130,10 @@ export default function Token({ params, searchParams }: TokenParams) {
   useEffect(() => {
     async function fetchNfts(account: string) {
       const [data, lensData] = await Promise.all([
-    
-     
         getNfts(chainIdNumber, account),
         getLensNfts(account),
       ]);
       if (data) {
-        
         setNfts(data);
       }
       if (lensData) {
@@ -138,10 +142,10 @@ export default function Token({ params, searchParams }: TokenParams) {
     }
 
     if (account) {
-
       fetchNfts(account);
     }
   }, [account, accountBytecode, chainIdNumber]);
+
 
   const [tokens, setTokens] = useState<TbaOwnedNft[]>([]);
   const allNfts = [...nfts, ...lensNfts];
@@ -175,6 +179,8 @@ export default function Token({ params, searchParams }: TokenParams) {
 const handleMint = React.useCallback(() => {
   const getData = async () => {
     try {
+      console.log(account,5568588);
+    
       const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
       // let wearableType =null;
       // // console.log(tokenboundAccountNum, 333);
