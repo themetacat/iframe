@@ -8,7 +8,10 @@ export const getAlchemy = (chainId: number) => {
     apiKey: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
     network,
   };
+  console.log(config,99999)
   const alchemy = new Alchemy(config);
+  console.log(alchemy,555555555);
+  
   return alchemy;
 };
 
