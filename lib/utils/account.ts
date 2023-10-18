@@ -57,7 +57,8 @@ export async function getAccount(
       functionName: "account",
       args: [implementationAddress, String(chainId), contractAddress, tokenId, salt],
     })) as string;
-console.log(tokenboundAbi);
+console.log(implementationAddress, String(chainId), contractAddress, tokenId, salt);
+
 
     return { data: response };
   } catch (err) {
