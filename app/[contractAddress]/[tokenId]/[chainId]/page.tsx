@@ -100,6 +100,8 @@ export default function Token({ params, searchParams }: TokenParams) {
     
     const result = await getAccount(Number(router?.tokenId), router?.contractAddress as any, chainIdNumber);
    
+    console.log(getAccount(8,'0x7524194dfcf68820006891d5d5810065f233a0b8',137));
+    console.log(router?.tokenId,router?.contractAddress,chainIdNumber);
     
     return result.data;
   });
@@ -147,6 +149,8 @@ export default function Token({ params, searchParams }: TokenParams) {
   }, [account, accountBytecode, chainIdNumber]);
 
 
+
+ 
   const [tokens, setTokens] = useState<TbaOwnedNft[]>([]);
   const allNfts = [...nfts, ...lensNfts];
 
@@ -301,6 +305,7 @@ const jumpToOpenC = (item:any) => {
     `https://opensea.io/assets/matic/${item.contract.address}/${decimalValue}`
   );
 };
+
 
   return (
     <div className="">

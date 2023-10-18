@@ -39,9 +39,10 @@ export async function getLensNfts(account: string) {
     }
 
     const filteredLensHandles = response.ownedNfts.filter(
-      (token) => token.contract.address == "0xdb46d1dc155634fbc732f92e853b10b288ad5a1d"
+      // (token) => token.contract.address == "0xdb46d1dc155634fbc732f92e853b10b288ad5a1d"
+      (token) => token.contract.address == "0x7524194dfCf68820006891d5D5810065F233A0B8"
     );
-
+    console.log('啊啊啊啊啊啊啊啊');
     return filteredLensHandles.reverse();
   } catch (err) {
     console.error(err);
