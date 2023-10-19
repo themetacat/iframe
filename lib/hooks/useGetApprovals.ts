@@ -2,9 +2,11 @@ import { OwnedNft } from "alchemy-sdk";
 import { erc721Abi } from "@/lib/abi";
 import { getPublicClient } from "@/lib/clients";
 import useSWR from "swr";
-import { graphApiKey } from "@/lib/constants";
+// import { graphApiKey } from "@/lib/constants";
 import request from "graphql-request";
 
+
+const graphApiKey = '4576048ff8f8c28038c4837fe941bdaf'
 export const useGetApprovals = (ownedNfts: OwnedNft[], owner?: string, chainID = 1) => {
   const contractsString = ownedNfts?.map((item) => item.contract.address).join(",");
   const ignoreFetch = !owner || ownedNfts.length === 0;
@@ -84,6 +86,7 @@ export async function getERC1155ApprovedOperators(
   ownerAddress: string
 ): Promise<any> {
   const subgraphUrl = `https://gateway.thegraph.com/api/${graphApiKey}/subgraphs/id/GCQVLurkeZrdMf4t5v5NyeWJY8pHhfE9sinjFMjLYd9C`;
+console.log(process.env.NEXT_PUBLIC_GRAPH_API_KEY,graphApiKey);
   const query = `
     {
       erc1155Operators(
@@ -170,8 +173,7 @@ export async function handleNftApprovals(nfts: OwnedNft[], account: string, chai
 
     // fetch global approvals for all nft contracts
     const { data: globalContractApprovalsMap, error: globalApprovalError } =
-      // await getGlobalApprovalsForContracts(Object.values(contracts), account);
-      await getGlobalApprovalsForContracts([],'')
+      await getGlobalApprovalsForContracts(Object.values(contracts), account);
 
     if (globalApprovalError) {
       console.error(globalApprovalError);
