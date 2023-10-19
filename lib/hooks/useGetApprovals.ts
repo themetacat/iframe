@@ -121,6 +121,7 @@ export async function getGlobalApprovalsForContracts(
         if (contract.tokenType === "ERC721") {
           return getERC721ApprovedOperators(contract.address, ownerAddress);
         }
+console.log('进来没有！！！！',getERC1155ApprovedOperators(contract.address, ownerAddress));
 
         return getERC1155ApprovedOperators(contract.address, ownerAddress);
       })
@@ -169,7 +170,8 @@ export async function handleNftApprovals(nfts: OwnedNft[], account: string, chai
 
     // fetch global approvals for all nft contracts
     const { data: globalContractApprovalsMap, error: globalApprovalError } =
-      await getGlobalApprovalsForContracts(Object.values(contracts), account);
+      // await getGlobalApprovalsForContracts(Object.values(contracts), account);
+      await getGlobalApprovalsForContracts([],'')
 
     if (globalApprovalError) {
       console.error(globalApprovalError);
