@@ -178,111 +178,111 @@ export default function Token({ params, searchParams }: TokenParams) {
   }, [nfts, approvalData, lensNfts]);
 
 
-const handleMint = React.useCallback(() => {
-  const getData = async () => {
-    try {
+// const handleMint = React.useCallback(() => {
+//   const getData = async () => {
+//     try {
     
-      const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
-      // let wearableType =null;
-      // // console.log(tokenboundAccountNum, 333);
-      setDataInfo(response.ownedNfts);
-      if (response.ownedNfts.length !== 0) {
-        //         }else{
-        response.ownedNfts.map((item:any) => {
-          // setwearableType(item.tokenUri.raw);
-          if (wearableType === null) {
+//       const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
+//       // let wearableType =null;
+//       // // console.log(tokenboundAccountNum, 333);
+//       setDataInfo(response.ownedNfts);
+//       if (response.ownedNfts.length !== 0) {
+//         //         }else{
+//         response.ownedNfts.map((item:any) => {
+//           // setwearableType(item.tokenUri.raw);
+//           if (wearableType === null) {
             
-            if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
-              // wearableType='voxels'
-              setwearableType("Voxels");
-            } else if (
-              item.tokenUri.raw.includes("https://peer.decentraland.org")
-            ) {
-              setwearableType("Decentraland");
-            } else {
-              setwearableType("Other");
-            }
-            // // console.log(wearableType,222);
-          } else {
-            // // console.log(2333333);
+//             if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
+//               // wearableType='voxels'
+//               setwearableType("Voxels");
+//             } else if (
+//               item.tokenUri.raw.includes("https://peer.decentraland.org")
+//             ) {
+//               setwearableType("Decentraland");
+//             } else {
+//               setwearableType("Other");
+//             }
+//             // // console.log(wearableType,222);
+//           } else {
+//             // // console.log(2333333);
 
-            if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
+//             if (item.tokenUri.raw.includes("https://www.cryptovoxels.com")) {
               
-              if (wearableType !== "Voxels") {
-                // wearableType='Other'
-                setwearableType("Other");
+//               if (wearableType !== "Voxels") {
+//                 // wearableType='Other'
+//                 setwearableType("Other");
                 
-                return;
-              }
+//                 return;
+//               }
               
-            } else if (
-              item.tokenUri.raw.includes("https://peer.decentraland.org")
-            ) {
-              if (wearableType !== "Decentraland") {
-                setwearableType("Other");
-                return;
-              }
+//             } else if (
+//               item.tokenUri.raw.includes("https://peer.decentraland.org")
+//             ) {
+//               if (wearableType !== "Decentraland") {
+//                 setwearableType("Other");
+//                 return;
+//               }
 
-            // } else {
-            //   if (wearableType !== "Other") {
-            //     return;
-            //   }
-            }
-          }
-        });
+//             // } else {
+//             //   if (wearableType !== "Other") {
+//             //     return;
+//             //   }
+//             }
+//           }
+//         });
 
 
-      // } else {
-      //   setDataInfoList(null);
-      }
+//       // } else {
+//       //   setDataInfoList(null);
+//       }
 
       
-      // // console.log(dataInfo, 666);
-    } catch (error) {
-      // console.error(error);
-    }
-  };
+//       // // console.log(dataInfo, 666);
+//     } catch (error) {
+//       // console.error(error);
+//     }
+//   };
 
-  getData();
-}, [wearableType,account]);
+//   getData();
+// }, [wearableType,account]);
 
-const handleBag = React.useCallback(() => {
-  const getData = async () => {
-    // // console.log(router.query.tokenId);
+// const handleBag = React.useCallback(() => {
+//   const getData = async () => {
+//     // // console.log(router.query.tokenId);
 
-    try {
-      const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
-      const wearableTypeEach = response.tokenUri.raw;
-      // // console.log(wearableTypeEach,666);
-      // const substring = wearableTypeEach.substring(0, 28);
-      // setwearableType(response.tokenUri.raw);
-      // // console.log(substring,3333);
+//     try {
+//       const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
+//       const wearableTypeEach = response.tokenUri.raw;
+//       // // console.log(wearableTypeEach,666);
+//       // const substring = wearableTypeEach.substring(0, 28);
+//       // setwearableType(response.tokenUri.raw);
+//       // // console.log(substring,3333);
 
-      setTitle(response.title);
-      // // console.log(response, 'response');
-    } catch (error) {
-      // console.error(error);
-    }
-  };
+//       setTitle(response.title);
+//       // // console.log(response, 'response');
+//     } catch (error) {
+//       // console.error(error);
+//     }
+//   };
 
-  getData();
-}, []);
+//   getData();
+// }, []);
 
-useEffect(() => {
+// useEffect(() => {
 
-  if (router?.contractAddress && router?.tokenId) {
-    // 确保参数都存在并是字符串
-    const contractAddress = String(router?.contractAddress);
-    const tokenId = String(router?.tokenId);
+//   if (router?.contractAddress && router?.tokenId) {
+//     // 确保参数都存在并是字符串
+//     const contractAddress = String(router?.contractAddress);
+//     const tokenId = String(router?.tokenId);
 
-    // 使用模板字符串将参数连接起来
-    userouter?.replace(`/${contractAddress}/${tokenId}/${chainIdNumber}`);
-  }
-  if (router) {
-    handleMint();
-    handleBag();
-  }
-}, [account, handleMint,handleBag,dataInfoList, wearableType]);
+//     // 使用模板字符串将参数连接起来
+//     userouter?.replace(`/${contractAddress}/${tokenId}/${chainIdNumber}`);
+//   }
+//   if (router) {
+//     handleMint();
+//     handleBag();
+//   }
+// }, [account, handleMint,handleBag,dataInfoList, wearableType]);
 
 // useEffect(() => {
 //   if (router.query) {
@@ -291,17 +291,17 @@ useEffect(() => {
 //   }
 // }, [router.query, tokenboundAccountNum, handleMint,handleBag,dataInfoList, wearableType]);
 
-const jumpToOpenC = (item:any) => {
-  // // console.log(item,'w22');
-  const idToken = item.id.tokenId;
-  // // console.log(idToken);
-  const decimalValue = parseInt(idToken, 16);
-  // // console.log(decimalValue,556);
-  // window.open(`https://opensea.io/assets/matic/${wearableType}/${decimalValue}`)
-  window.open(
-    `https://opensea.io/assets/matic/${item.contract.address}/${decimalValue}`
-  );
-};
+// const jumpToOpenC = (item:any) => {
+//   // // console.log(item,'w22');
+//   const idToken = item.id.tokenId;
+//   // // console.log(idToken);
+//   const decimalValue = parseInt(idToken, 16);
+//   // // console.log(decimalValue,556);
+//   // window.open(`https://opensea.io/assets/matic/${wearableType}/${decimalValue}`)
+//   window.open(
+//     `https://opensea.io/assets/matic/${item.contract.address}/${decimalValue}`
+//   );
+// };
 
 
   return (
