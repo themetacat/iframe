@@ -32,7 +32,9 @@ export default function VoxFiled() {
     // "wallet": "0x60ea96f57b3a5715a90dae1440a78f8bb339c92e",
     attachments: [],
     skin: null,
+    // name: "Bag-"+router.query.tokenID,
   });
+  // var voxMesh = null;
   let windowVal:any = {};
   var last_rotation :any= {};
   let voxMesh:any;
@@ -54,164 +56,164 @@ export default function VoxFiled() {
     // return t.toString() === value.toString() ? t : null;
   }
 
-//   const get_vox_data = (requestConfig:any, voxMesh:any) => {
-//     var parser = new vox.Parser();
+  const get_vox_data = (requestConfig:any, voxMesh:any) => {
+    var parser = new vox.Parser();
     
-//     parser
-//       .parse(
+    parser
+      .parse(
         
-//         // "https://www.voxels.com"+requestConfig.url
-//           // "https://wearable.vercel.app/"+requestConfig.url.hash+".vox"
-//           "https://wearable.vercel.app/"+requestConfig.voxHash+".vox"
-//       )
-//       .then(function (parsed:any) {
-//         // console.log(parsed, "有没有");
+        // "https://www.voxels.com"+requestConfig.url
+          // "https://wearable.vercel.app/"+requestConfig.url.hash+".vox"
+          "https://wearable.vercel.app/"+requestConfig.voxHash+".vox"
+      )
+      .then(function (parsed:any) {
+        // console.log(parsed, "有没有");
 
-//         let size = parsed.size;
+        let size = parsed.size;
 
-//         size.x += 2;
-//         size.y += 2;
-//         size.z += 2;
+        size.x += 2;
+        size.y += 2;
+        size.z += 2;
 
-//         let field = ndarray(new Uint16Array(size.x * size.y * size.z), [
-//           size.x,
-//           size.y,
-//           size.z,
-//         ]);
-//         ndarrayFill(field, (x:any, y:any, z:any) => 0);
+        let field = ndarray(new Uint16Array(size.x * size.y * size.z), [
+          size.x,
+          size.y,
+          size.z,
+        ]);
+        ndarrayFill(field, (x:any, y:any, z:any) => 0);
 
-//         parsed.voxels.forEach((row:any) => {
-//           let { x, y, z, colorIndex } = row;
-//           field.set(x, y, z, colorIndex + (1 << 15));
-//         });
+        parsed.voxels.forEach((row:any) => {
+          let { x, y, z, colorIndex } = row;
+          field.set(x, y, z, colorIndex + (1 << 15));
+        });
 
-//         const vertData = aoMesher(field);
+        const vertData = aoMesher(field);
 
-//         let face = 0;
-//         let i = 0;
-//         // 大小
-//         let s = 0.01;
+        let face = 0;
+        let i = 0;
+        // 大小
+        let s = 0.01;
 
-//         const hue = 0;
-//         const positions = [];
-//         const indices = [];
-//         const normals = [];
-//         const colors = [];
+        const hue = 0;
+        const positions = [];
+        const indices = [];
+        const normals = [];
+        const colors = [];
 
-//         // Identity function, use these to nudge the mesh as needed
-//         const fx = (x:any) => x;
-//         const fy = (y:any) => y;
-//         const fz = (z:any) => z;
+        // Identity function, use these to nudge the mesh as needed
+        const fx = (x:any) => x;
+        const fy = (y:any) => y;
+        const fz = (z:any) => z;
 
-//         while (i < vertData.length) {
-//           const textureIndex = vertData[i + 7];
+        while (i < vertData.length) {
+          const textureIndex = vertData[i + 7];
 
-//           // const color = new BABYLON.Color3(1, 1, 0)
-//           // var a = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          // const color = new BABYLON.Color3(1, 1, 0)
+          // var a = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
 
-//           positions.push(fx(vertData[i + 0] * s));
-//           positions.push(fy(vertData[i + 1] * s));
-//           positions.push(fz(vertData[i + 2] * s));
-//           i += 8;
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
 
-//           // var b = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
-//           positions.push(fx(vertData[i + 0] * s));
-//           positions.push(fy(vertData[i + 1] * s));
-//           positions.push(fz(vertData[i + 2] * s));
-//           i += 8;
+          // var b = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
 
-//           // var c = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
-//           positions.push(fx(vertData[i + 0] * s));
-//           positions.push(fy(vertData[i + 1] * s));
-//           positions.push(fz(vertData[i + 2] * s));
-//           i += 8;
+          // var c = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
 
-//           // Face index
-//           indices.push(face + 0, face + 2, face + 1);
+          // Face index
+          indices.push(face + 0, face + 2, face + 1);
 
-//           const intensity = 0.5;
-//           const offset = 0.4;
-//           let color = new BABYLON.Color3(
-//             parsed.palette[textureIndex].r / 255,
-//             parsed.palette[textureIndex].g / 255,
-//             parsed.palette[textureIndex].b / 255
-//           );
+          const intensity = 0.5;
+          const offset = 0.4;
+          let color = new BABYLON.Color3(
+            parsed.palette[textureIndex].r / 255,
+            parsed.palette[textureIndex].g / 255,
+            parsed.palette[textureIndex].b / 255
+          );
 
-//           colors.push(
-//             color.r * ((vertData[i - 24 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.g * ((vertData[i - 24 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.b * ((vertData[i - 24 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(1);
+          colors.push(
+            color.r * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 24 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
 
-//           colors.push(
-//             color.r * ((vertData[i - 16 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.g * ((vertData[i - 16 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.b * ((vertData[i - 16 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(1);
+          colors.push(
+            color.r * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 16 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
 
-//           colors.push(
-//             color.r * ((vertData[i - 8 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.g * ((vertData[i - 8 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(
-//             color.b * ((vertData[i - 8 + 3] / 255) * intensity + offset)
-//           );
-//           colors.push(1);
+          colors.push(
+            color.r * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.g * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(
+            color.b * ((vertData[i - 8 + 3] / 255) * intensity + offset)
+          );
+          colors.push(1);
 
-//           face += 3;
-//         }
+          face += 3;
+        }
 
-//         requestConfig.positions = positions;
-// // console.log(positions);
+        requestConfig.positions = positions;
+// console.log(positions);
 
-//         requestConfig.indices = indices;
-//         requestConfig.colors = colors;
-//         // return requestConfig
-//         let {
-//           positions: t,
-//           indices: r,
-//           colors: co,
-//           colliderPositions: ca,
-//           colliderIndices: cc,
-//         } = requestConfig;
-//         const vertexData = new BABYLON.VertexData();
+        requestConfig.indices = indices;
+        requestConfig.colors = colors;
+        // return requestConfig
+        let {
+          positions: t,
+          indices: r,
+          colors: co,
+          colliderPositions: ca,
+          colliderIndices: cc,
+        } = requestConfig;
+        const vertexData = new BABYLON.VertexData();
 
-//         vertexData.positions = t;
-//         vertexData.indices = r;
-//         vertexData.colors = co;
-//         // console.log(t);
-//         // console.log(r)
-//         // console.log(co);
-//         // BABYLON.VertexData.ComputeNormals(positions, indices, normals);
-//         // vertexData.normals = normals;
+        vertexData.positions = t;
+        vertexData.indices = r;
+        vertexData.colors = co;
+        // console.log(t);
+        // console.log(r)
+        // console.log(co);
+        // BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+        // vertexData.normals = normals;
 
-//         vertexData.applyToMesh(voxMesh);
-//         // voxMesh.position.y = 0.926;
-//         // voxMesh.position.y = 1.509;
+        vertexData.applyToMesh(voxMesh);
+        // voxMesh.position.y = 0.926;
+        // voxMesh.position.y = 1.509;
 
       
 
 
-//         voxMesh.checkCollisions = false;
-//         voxMesh.refreshBoundingInfo();
-//         return voxMesh;
-//       });
+        voxMesh.checkCollisions = false;
+        voxMesh.refreshBoundingInfo();
+        return voxMesh;
+      });
     
-//       // (window as any).get_vox_data = get_vox_data;
+      // (window as any).get_vox_data = get_vox_data;
 
-//   };
+  };
   useEffect(() => {
     const canvas = document.getElementById("renderCanvas");
     // console.log(canvas);
@@ -366,236 +368,236 @@ export default function VoxFiled() {
       engine.resize();
     });
 
-//     async function onLoadCostume() {
-//       // console.log(router.query.tokenID);
-// // console.log(getModelInfo(19));
-//       const getModelInfoData = getModelInfo(router?.tokenId)
+    async function onLoadCostume() {
+      // console.log(router.query.tokenID);
+// console.log(getModelInfo(19));
+      const getModelInfoData = getModelInfo(router?.tokenId)
       
-//       getModelInfoData.then(async(getModelInfoItem)=>{
-//         if (JSON.stringify(getModelInfoItem.data) === '{}') {
-//           console.log('错误');
-//         }else{
-//         const data = getModelInfoItem.data;
-//         // const data = await response.json();
-//   // console.log(data,'data');
-//   // if(getModelInfoItem.data){
+      getModelInfoData.then(async(getModelInfoItem)=>{
+        if (JSON.stringify(getModelInfoItem.data) === '{}') {
+          console.log('错误');
+        }else{
+        const data = getModelInfoItem.data;
+        // const data = await response.json();
+  // console.log(data,'data');
+  // if(getModelInfoItem.data){
     
-//   // }
-//         // 在这里使用从JSON文件中读取到的数据
-//         const attachments = data.attachments;
+  // }
+        // 在这里使用从JSON文件中读取到的数据
+        const attachments = data.attachments;
   
-//         for (let att  of attachments) {
-//           // (window as any).droppedWearable = att;
-//           windowVal['droppedWearable']= att
-//           // (window as any).droppedWearable.token_id = att.token_id
-//           windowVal['droppedWearable'].token_id= att.token_id
-//             targetBone = att.bone;
-//             attachmentId.current = att.uuid
-//             all_last_rotation.current[attachmentId.current] = att.rotation
+        for (let att  of attachments) {
+          // (window as any).droppedWearable = att;
+          windowVal['droppedWearable']= att
+          // (window as any).droppedWearable.token_id = att.token_id
+          windowVal['droppedWearable'].token_id= att.token_id
+            targetBone = att.bone;
+            attachmentId.current = att.uuid
+            all_last_rotation.current[attachmentId.current] = att.rotation
             
-//             // costume.attachments.push(att)
-//             renderVoxModel();
+            // costume.attachments.push(att)
+            renderVoxModel();
   
-//         }
-//         // onClick(null)
-//         }
-//       })
+        }
+        // onClick(null)
+        }
+      })
      
-//   }
-//   function getWearableURL(droppedWearable:any) {
-//     // ${chain_info[droppedWearable.chain_id]}
-//     const hexValue = droppedWearable.voxHash;
-//     // const decimalValue = parseInt(hexValue, 16);
-//     // return `/c/v2/polygon/${
-//     //   droppedWearable.collection_address
-//     // }/${decimalValue}/vox`;
-//     return `https://wearable.vercel.app/${hexValue}.vox`
-//   } 
+  }
+  function getWearableURL(droppedWearable:any) {
+    // ${chain_info[droppedWearable.chain_id]}
+    const hexValue = droppedWearable.voxHash;
+    // const decimalValue = parseInt(hexValue, 16);
+    // return `/c/v2/polygon/${
+    //   droppedWearable.collection_address
+    // }/${decimalValue}/vox`;
+    return `https://wearable.vercel.app/${hexValue}.vox`
+  } 
 
-//   const get_avatar = function () {
-//     if (!scene) return null;
-//     return scene.getMeshByName("avatar");
-//   };
+  const get_avatar = function () {
+    if (!scene) return null;
+    return scene.getMeshByName("avatar");
+  };
 
-//   function renderVoxModel() {
+  function renderVoxModel() {
      
-//     let droppedWearable = getDroppedWearable()
+    let droppedWearable = getDroppedWearable()
 
-//     if(modelList[droppedWearable.gateway]){
-//       // found = true;
-//       return
-//     }
+    if(modelList[droppedWearable.gateway]){
+      // found = true;
+      return
+    }
 
-//     const shaderMaterial = new BABYLON.StandardMaterial("wearable", scene);
-//     shaderMaterial.emissiveColor.set(.3, .3, .3);
-//     shaderMaterial.diffuseColor.set(1, 1, 1);
-//     shaderMaterial.blockDirtyMechanism = true;
+    const shaderMaterial = new BABYLON.StandardMaterial("wearable", scene);
+    shaderMaterial.emissiveColor.set(.3, .3, .3);
+    shaderMaterial.diffuseColor.set(1, 1, 1);
+    shaderMaterial.blockDirtyMechanism = true;
 
-//    let wearable_url = getWearableURL(droppedWearable)
+   let wearable_url = getWearableURL(droppedWearable)
 
-//     const requestConfig = {
-//         renderJob: 1,
-//         url: wearable_url,
-//         token_id: droppedWearable.token_id,
-//         voxHash:droppedWearable.voxHash
-//     };
+    const requestConfig = {
+        renderJob: 1,
+        url: wearable_url,
+        token_id: droppedWearable.token_id,
+        voxHash:droppedWearable.voxHash
+    };
 
-//     voxMesh = new BABYLON.Mesh("utils/vox-box", scene);
-//     voxMesh.material = shaderMaterial;
-//     voxMesh.isPickable = true;
-//     voxMesh.checkCollisions = false;
-//     voxMesh.gateway=droppedWearable.gateway
-//     voxMesh.scaling.set(0.5, 0.5, 0.5);
-//     const origin = new BABYLON.TransformNode("Node/wearable", scene);
+    voxMesh = new BABYLON.Mesh("utils/vox-box", scene);
+    voxMesh.material = shaderMaterial;
+    voxMesh.isPickable = true;
+    voxMesh.checkCollisions = false;
+    voxMesh.gateway=droppedWearable.gateway
+    voxMesh.scaling.set(0.5, 0.5, 0.5);
+    const origin = new BABYLON.TransformNode("Node/wearable", scene);
 
-//     voxMesh.setParent(origin);
-//     origin.rotation.x = -Math.PI / 2;
+    voxMesh.setParent(origin);
+    origin.rotation.x = -Math.PI / 2;
 
-//     const the_bone = bone(targetBone);
-//     if (!the_bone) {
-//         console.log('no Bone');
-//         return
-//     }
-//     if (get_avatar()) {
-//         origin.attachToBone(the_bone, get_avatar() as any);
-//         last_rotation = {}
-//         if (droppedWearable?.position && droppedWearable?.rotation && droppedWearable?.scaling) {
-//             updateAllPositionValue('load_model_json')
-//         } else {
-//             updateAllPositionValue(null)
-//         }
-//         focus()
-//         modelList[droppedWearable.gateway]=true
+    const the_bone = bone(targetBone);
+    if (!the_bone) {
+        console.log('no Bone');
+        return
+    }
+    if (get_avatar()) {
+        origin.attachToBone(the_bone, get_avatar() as any);
+        last_rotation = {}
+        if (droppedWearable?.position && droppedWearable?.rotation && droppedWearable?.scaling) {
+            updateAllPositionValue('load_model_json')
+        } else {
+            updateAllPositionValue(null)
+        }
+        focus()
+        modelList[droppedWearable.gateway]=true
         
-//        get_vox_data(requestConfig, voxMesh)
-//     }
+       get_vox_data(requestConfig, voxMesh)
+    }
 
-//     voxMesh.uuid = attachmentId.current
-// setVoxMeshState(voxMesh)
-// }
+    voxMesh.uuid = attachmentId.current
+setVoxMeshState(voxMesh)
+}
 
-// function bone(e:any) {
+function bone(e:any) {
       
-//   if (!skeleton) return null;
-//   const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
+  if (!skeleton) return null;
+  const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
 
-//   if (t == -1) {
-//     console.error(`Bad bone name "${e}"`);
-//     return null;
-//   }
-//   return skeleton.bones[t];
-// }
-//     onLoadCostume()
+  if (t == -1) {
+    console.error(`Bad bone name "${e}"`);
+    return null;
+  }
+  return skeleton.bones[t];
+}
+    onLoadCostume()
    // 坐标向量
-    // const gizmoManager = get_GizmoManager();
-    // function get_GizmoManager() {
-    //     const gizmoManager = new BABYLON.GizmoManager(scene, 3.5);
-    //     gizmoManager.positionGizmoEnabled = true;
-    //     gizmoManager.rotationGizmoEnabled = true;
-    //     gizmoManager.scaleGizmoEnabled = false;
+    const gizmoManager = get_GizmoManager();
+    function get_GizmoManager() {
+        const gizmoManager = new BABYLON.GizmoManager(scene, 3.5);
+        gizmoManager.positionGizmoEnabled = true;
+        gizmoManager.rotationGizmoEnabled = true;
+        gizmoManager.scaleGizmoEnabled = false;
   
-    //     gizmoManager.usePointerToAttachGizmos = false;
-    //     gizmoManager.boundingBoxGizmoEnabled = true;
-    //     if (
-    //       !gizmoManager.gizmos.positionGizmo ||
-    //       !gizmoManager.gizmos.rotationGizmo
-    //     )
-    //       throw new Error("gizmos not found");
-    //     gizmoManager.gizmos.positionGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.positionGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.positionGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
+        gizmoManager.usePointerToAttachGizmos = false;
+        gizmoManager.boundingBoxGizmoEnabled = true;
+        if (
+          !gizmoManager.gizmos.positionGizmo ||
+          !gizmoManager.gizmos.rotationGizmo
+        )
+          throw new Error("gizmos not found");
+        gizmoManager.gizmos.positionGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.positionGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.positionGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
   
-    //     gizmoManager.gizmos.rotationGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.rotationGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
-    //     gizmoManager.gizmos.rotationGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
-    //       () => updateAllPositionValue(null)
-    //     );
+        gizmoManager.gizmos.rotationGizmo.xGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.rotationGizmo.yGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
+        gizmoManager.gizmos.rotationGizmo.zGizmo.dragBehavior.onDragEndObservable.add(
+          () => updateAllPositionValue(null)
+        );
   
-    //     gizmoManager.gizmos.rotationGizmo.updateGizmoRotationToMatchAttachedMesh =
-    //       false;
+        gizmoManager.gizmos.rotationGizmo.updateGizmoRotationToMatchAttachedMesh =
+          false;
   
-    //     if (gizmoManager.gizmos.boundingBoxGizmo) {
-    //       gizmoManager.gizmos.boundingBoxGizmo.scaleRatio = 0.8;
-    //       gizmoManager.gizmos.boundingBoxGizmo.scaleBoxSize = 0.03;
-    //       gizmoManager.gizmos.boundingBoxGizmo.rotationSphereSize = 0;
-    //       gizmoManager.gizmos.boundingBoxGizmo.onScaleBoxDragEndObservable.add(
-    //         () => updateAllPositionValue(null)
-    //       );
-    //     }
+        if (gizmoManager.gizmos.boundingBoxGizmo) {
+          gizmoManager.gizmos.boundingBoxGizmo.scaleRatio = 0.8;
+          gizmoManager.gizmos.boundingBoxGizmo.scaleBoxSize = 0.03;
+          gizmoManager.gizmos.boundingBoxGizmo.rotationSphereSize = 0;
+          gizmoManager.gizmos.boundingBoxGizmo.onScaleBoxDragEndObservable.add(
+            () => updateAllPositionValue(null)
+          );
+        }
   
-    //     gizmoManager.positionGizmoEnabled = true;
-    //     gizmoManager.rotationGizmoEnabled = false;
-    //     gizmoManager.boundingBoxGizmoEnabled = false;
+        gizmoManager.positionGizmoEnabled = true;
+        gizmoManager.rotationGizmoEnabled = false;
+        gizmoManager.boundingBoxGizmoEnabled = false;
   
-    //     return gizmoManager;
-    //   }
+        return gizmoManager;
+      }
 
-    //   function updateAllPositionValue(type:any) {
+      function updateAllPositionValue(type:any) {
      
   
-    //     if (!voxMesh) {
+        if (!voxMesh) {
         
-    //     } else if (type === 'change_model_mesh') {
+        } else if (type === 'change_model_mesh') {
   
          
-    //     } else {
+        } else {
          
-    //       if (type === 'load_model_json') {
-    //       let  the_wearable = getDroppedWearable()
+          if (type === 'load_model_json') {
+          let  the_wearable = getDroppedWearable()
   
-    //         voxMesh.position.x = parseFloat(the_wearable.position[0]);
-    //         voxMesh.position.y = parseFloat(the_wearable.position[1]);
-    //         voxMesh.position.z = parseFloat(the_wearable.position[2]);
+            voxMesh.position.x = parseFloat(the_wearable.position[0]);
+            voxMesh.position.y = parseFloat(the_wearable.position[1]);
+            voxMesh.position.z = parseFloat(the_wearable.position[2]);
   
-    //         voxMesh.rotation.x = parseFloat(the_wearable.rotation[0]);
-    //         voxMesh.rotation.y = parseFloat(the_wearable.rotation[1]);
-    //         voxMesh.rotation.z = parseFloat(the_wearable.rotation[2]);
+            voxMesh.rotation.x = parseFloat(the_wearable.rotation[0]);
+            voxMesh.rotation.y = parseFloat(the_wearable.rotation[1]);
+            voxMesh.rotation.z = parseFloat(the_wearable.rotation[2]);
   
-    //         voxMesh.scaling.x = parseFloat(the_wearable.scaling[0]);
-    //         voxMesh.scaling.y = parseFloat(the_wearable.scaling[1]);
-    //         voxMesh.scaling.z = parseFloat(the_wearable.scaling[2]);
-    //     }
+            voxMesh.scaling.x = parseFloat(the_wearable.scaling[0]);
+            voxMesh.scaling.y = parseFloat(the_wearable.scaling[1]);
+            voxMesh.scaling.z = parseFloat(the_wearable.scaling[2]);
+        }
        
-    //     voxMesh.rotationQuaternion = null;
+        voxMesh.rotationQuaternion = null;
   
      
-    //     if (!gizmoManager.boundingBoxGizmoEnabled) {
-    //             last_rotation = {}
-    //         }
+        if (!gizmoManager.boundingBoxGizmoEnabled) {
+                last_rotation = {}
+            }
   
     
-    //     }
+        }
         
-    //     const refValueX = voxMesh?.rotation.x; // 示例字符串值
-    //        const refValueY = voxMesh?.rotation.y; // 示例字符串值
-    //        const refValueZ = voxMesh?.rotation.z; // 示例字符串值
-    //     const fixedValueX = parseFloat(refValueX).toFixed(2);
-    //     const fixedValueY = parseFloat(refValueY).toFixed(2);
-    //     const fixedValueZ = parseFloat(refValueZ).toFixed(2);
+        const refValueX = voxMesh?.rotation.x; // 示例字符串值
+           const refValueY = voxMesh?.rotation.y; // 示例字符串值
+           const refValueZ = voxMesh?.rotation.z; // 示例字符串值
+        const fixedValueX = parseFloat(refValueX).toFixed(2);
+        const fixedValueY = parseFloat(refValueY).toFixed(2);
+        const fixedValueZ = parseFloat(refValueZ).toFixed(2);
        
         
-    //   }
+      }
   
     },[])
 
     //     // 获取 拖放的wearable
-    // function getDroppedWearable() {
-    //     // let droppedWearableValue = window["droppedWearable"];
-    //     let droppedWearableValue = windowVal["droppedWearable"];
-    //     return droppedWearableValue !== null && droppedWearableValue !== undefined
-    //       ? droppedWearableValue
-    //       : null;
-    //   }
+    function getDroppedWearable() {
+        // let droppedWearableValue = window["droppedWearable"];
+        let droppedWearableValue = windowVal["droppedWearable"];
+        return droppedWearableValue !== null && droppedWearableValue !== undefined
+          ? droppedWearableValue
+          : null;
+      }
 
   return (
     <>
