@@ -27,7 +27,7 @@ module.exports = (phase, { defaultConfig }) => {
     async headers() {
       return [
         {
-          source: "/.*",
+          "source": "/api/(.*)",
           headers: [
             { key: "Access-Control-Allow-Credentials", value: "true" },
             { key: "Access-Control-Allow-Origin", value: "*" },
