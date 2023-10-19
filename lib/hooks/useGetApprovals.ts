@@ -5,8 +5,6 @@ import useSWR from "swr";
 // import { graphApiKey } from "@/lib/constants";
 import request from "graphql-request";
 
-
-const graphApiKey = '4576048ff8f8c28038c4837fe941bdaf'
 export const useGetApprovals = (ownedNfts: OwnedNft[], owner?: string, chainID = 1) => {
   const contractsString = ownedNfts?.map((item) => item.contract.address).join(",");
   const ignoreFetch = !owner || ownedNfts.length === 0;
@@ -20,7 +18,7 @@ export const useGetApprovals = (ownedNfts: OwnedNft[], owner?: string, chainID =
     }
   );
 };
-
+const graphApiKey = '4576048ff8f8c28038c4837fe941bdaf'
 export interface Nft extends OwnedNft {
   hasApprovals?: boolean;
 }
@@ -86,7 +84,6 @@ export async function getERC1155ApprovedOperators(
   ownerAddress: string
 ): Promise<any> {
   const subgraphUrl = `https://gateway.thegraph.com/api/${graphApiKey}/subgraphs/id/GCQVLurkeZrdMf4t5v5NyeWJY8pHhfE9sinjFMjLYd9C`;
-console.log(process.env.NEXT_PUBLIC_GRAPH_API_KEY,graphApiKey);
   const query = `
     {
       erc1155Operators(
@@ -99,9 +96,10 @@ console.log(process.env.NEXT_PUBLIC_GRAPH_API_KEY,graphApiKey);
       }
     }
   `;
-
+  console.log(request(subgraphUrl, query),subgraphUrl, query);
   try {
     const response = await request(subgraphUrl, query);
+    
     return response;
   } catch (error) {
     console.error(error);
@@ -124,7 +122,7 @@ export async function getGlobalApprovalsForContracts(
         if (contract.tokenType === "ERC721") {
           return getERC721ApprovedOperators(contract.address, ownerAddress);
         }
-console.log('进来没有！！！！',getERC1155ApprovedOperators(contract.address, ownerAddress));
+
 
         return getERC1155ApprovedOperators(contract.address, ownerAddress);
       })
