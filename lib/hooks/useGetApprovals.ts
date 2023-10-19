@@ -2,7 +2,7 @@ import { OwnedNft } from "alchemy-sdk";
 import { erc721Abi } from "@/lib/abi";
 import { getPublicClient } from "@/lib/clients";
 import useSWR from "swr";
-// import { graphApiKey } from "@/lib/constants";
+import { graphApiKey } from "@/lib/constants";
 import request from "graphql-request";
 
 export const useGetApprovals = (ownedNfts: OwnedNft[], owner?: string, chainID = 1) => {
@@ -18,7 +18,6 @@ export const useGetApprovals = (ownedNfts: OwnedNft[], owner?: string, chainID =
     }
   );
 };
-const graphApiKey = '4576048ff8f8c28038c4837fe941bdaf'
 export interface Nft extends OwnedNft {
   hasApprovals?: boolean;
 }
