@@ -307,7 +307,8 @@ const jumpToOpenC = (item:any) => {
   return (
     <div className="">
       <div className="max-w-screen relative mx-auto aspect-square max-h-screen overflow-hidden bg-white">
-        <div className="relative h-full w-full">
+      <VoxFiled />
+        {/* <div className="relative h-full w-full">
         {wearableType==='Voxels'? (
           <div style={{ marginTop: "20px" }}>
             <VoxFiled />
@@ -393,7 +394,7 @@ const jumpToOpenC = (item:any) => {
               </div>
               </>   ):<></>}
       
-        </div>
+        </div> */}
       </div>
     </div>
   );

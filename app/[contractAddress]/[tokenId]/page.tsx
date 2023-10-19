@@ -33,7 +33,6 @@ export default function Token({ params, searchParams }: TokenParams) {
   const [lensNfts, setLensNfts] = useState<TbaOwnedNft[]>([]);
   const { tokenId, contractAddress } = params;
   const [showTokenDetail, setShowTokenDetail] = useState(false);
-console.log(5555666666666);
 
   const {
     data: nftImages,
