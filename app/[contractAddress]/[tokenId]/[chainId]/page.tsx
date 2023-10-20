@@ -339,14 +339,14 @@ const jumpToOpenC = (item:any) => {
                       return (
                         <div className={style.boxContent} key={item.id}>
                           <img src={item.metadata.image} alt="" />
-                          <img
+                          {/* <img
                             alt="" 
                             src="/images/Nomal.png"
                             className={style.icon}
                             onClick={() => {
                               jumpToOpenC(item);
                             }}
-                          ></img>
+                          ></img> */}
                           <div className={style.worldCon}>
                             {item.tokenUri.raw.includes(
                               "https://www.cryptovoxels.com"
