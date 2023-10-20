@@ -235,8 +235,6 @@ export default function DclContent() {
     
         
   if(router){
-  console.log(router?.tokenId);
-  
   
         const getModelInfoData = getModelInfo(router?.tokenId);
   
@@ -755,7 +753,7 @@ export default function DclContent() {
                 wearableMesh[0].parent = modelMesh;
                 var oldPostion =
                   modelMesh.getBoundingInfo().boundingBox.centerWorld;
-  
+                  setWearablePostion(the_wearable.category, wearableMesh[0], oldPostion)
                 last_rotation = [];
   
                 if (
@@ -869,6 +867,33 @@ export default function DclContent() {
   
   
      
+    }
+    const setWearablePostion = function (category:any, wearableMesh:any, oldPostion:any) {
+      // if (category === 'upper_body') {
+      //     wearableMesh.position.set(-oldPostion.x, -oldPostion.y, -oldPostion.z)
+      //     // wearableMesh.setLocalPosition(new BABYLON.Vector3(-oldPostion.x, -oldPostion.y - 0.27, -oldPostion.z))
+      //     // if(category ==='hands_wear'){
+      //     //     wearableMesh.scaling.set(1, 1.3, 1.3)
+      //     // }
+      // } else
+
+      if (category === "lower_body") {
+        wearableMesh.rotate(BABYLON.Axis.Z, Math.PI, BABYLON.Space.LOCAL);
+        // wearableMesh.scaling.set(1.1, 1, 1.2)
+        wearableMesh.position.set(-oldPostion.x, oldPostion.y, -oldPostion.z);
+      } else if (category === "feet") {
+        wearableMesh.position.set(
+          -oldPostion.x,
+          -oldPostion.y - 0.11,
+          -oldPostion.z - 0.1
+        );
+        wearableMesh.rotate(BABYLON.Axis.X, Math.PI / 2, BABYLON.Space.LOCAL);
+      } else {
+        wearableMesh.position.set(-oldPostion.x, -oldPostion.y, -oldPostion.z);
+        // if(category ==='hands_wear'){
+        //     wearableMesh.scaling.set(1, 1.3, 1.3)
+        // }
+      }
     }
     }, []);
   
