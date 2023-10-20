@@ -50,7 +50,7 @@ export default function VoxFiled() {
 
   let skeleton:any = null;
   function num(value:any) {
-    // console.log(value,'value');
+    // // console.log(value,'value');
     
     const t = parseFloat(value);
     return t;
@@ -68,7 +68,7 @@ export default function VoxFiled() {
           "https://wearable.vercel.app/"+requestConfig.voxHash+".vox"
       )
       .then(function (parsed:any) {
-        // console.log(parsed, "有没有");
+        // // console.log(parsed, "有没有");
 
         let size = parsed.size;
 
@@ -177,7 +177,7 @@ export default function VoxFiled() {
         }
 
         requestConfig.positions = positions;
-// console.log(positions);
+// // console.log(positions);
 
         requestConfig.indices = indices;
         requestConfig.colors = colors;
@@ -194,9 +194,9 @@ export default function VoxFiled() {
         vertexData.positions = t;
         vertexData.indices = r;
         vertexData.colors = co;
-        // console.log(t);
-        // console.log(r)
-        // console.log(co);
+        // // console.log(t);
+        // // console.log(r)
+        // // console.log(co);
         // BABYLON.VertexData.ComputeNormals(positions, indices, normals);
         // vertexData.normals = normals;
 
@@ -217,7 +217,7 @@ export default function VoxFiled() {
   };
   useEffect(() => {
     const canvas = document.getElementById("renderCanvas");
-    // console.log(canvas);
+    // // console.log(canvas);
 
     const engine = new BABYLON.Engine(canvas as HTMLCanvasElement, true);
     const createScene = function () {
@@ -299,7 +299,7 @@ export default function VoxFiled() {
       costumeMaterial.specularPower = 1000;
       costumeMaterial.blockDirtyMechanism = true;
       let material = costumeMaterial;
-    //   console.log(material, "material3366666");
+    //   // console.log(material, "material3366666");
       BABYLON.SceneLoader.ImportMesh(
         null,
         `https://www.voxels.com/models/`,
@@ -320,7 +320,7 @@ export default function VoxFiled() {
           skeletonRoot = skeletons[0];
           // window["skeleton"] = skeletonRoot;
           skeleton = skeletonRoot;
-console.log(skeleton);
+// console.log(skeleton);
 
           const bones = skeletonRoot.bones.filter(
             (bone) => !bone.name.match(/index/i)
@@ -354,6 +354,7 @@ console.log(skeleton);
             boneSphere.renderingGroupId = 2;
             boneSphere.setEnabled(false);
           });
+          onLoadCostume()
         }
       );
 
@@ -371,17 +372,17 @@ console.log(skeleton);
     });
 
     async function onLoadCostume() {
-      // console.log(router.query.tokenID);
-// console.log(getModelInfo(19));
+      // // console.log(router.query.tokenID);
+// // console.log(getModelInfo(19));
       const getModelInfoData = getModelInfo(router?.tokenId)
       
       getModelInfoData.then(async(getModelInfoItem)=>{
         if (JSON.stringify(getModelInfoItem.data) === '{}') {
-          console.log('错误');
+          // console.log('错误');
         }else{
         const data = getModelInfoItem.data;
         // const data = await response.json();
-  // console.log(data,'data');
+  // // console.log(data,'data');
   // if(getModelInfoItem.data){
     
   // }
@@ -456,10 +457,10 @@ console.log(skeleton);
     origin.rotation.x = -Math.PI / 2;
 
     const the_bone = bone(targetBone.current);
-    console.log(bone(targetBone.current),targetBone.current);
+    // console.log(bone(targetBone.current),targetBone.current);
     
     if (!the_bone) {
-        console.log('no Bone');
+        // console.log('no Bone');
         return
     }
     if (get_avatar()) {
@@ -481,19 +482,19 @@ setVoxMeshState(voxMesh)
 }
 
 function bone(e:any) {
-      console.log(skeleton);
+      // console.log(skeleton);
       
   if (!skeleton) return null;
   const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
-console.log(t);
+// console.log(t);
 
   if (t == -1) {
-    console.error(`Bad bone name "${e}"`);
+    // console.error(`Bad bone name "${e}"`);
     return null;
   }
   return skeleton.bones[t];
 }
-    onLoadCostume()
+  
    // 坐标向量
     const gizmoManager = get_GizmoManager();
     function get_GizmoManager() {
