@@ -39,7 +39,8 @@ export default function VoxFiled() {
   var last_rotation :any= {};
   let voxMesh:any;
   let found = false;
-  let targetBone:any = null;
+  // let targetBone:any = null;
+  let targetBone:any = React.useRef(null);
   // 在页面加载时发送消息
   const all_last_rotation:any = React.useRef({});
   let modelList:any = {};
@@ -391,7 +392,7 @@ export default function VoxFiled() {
           windowVal['droppedWearable']= att
           // (window as any).droppedWearable.token_id = att.token_id
           windowVal['droppedWearable'].token_id= att.token_id
-            targetBone = att.bone;
+            targetBone.current = att.bone;
             attachmentId.current = att.uuid
             all_last_rotation.current[attachmentId.current] = att.rotation
             
@@ -453,7 +454,7 @@ export default function VoxFiled() {
     voxMesh.setParent(origin);
     origin.rotation.x = -Math.PI / 2;
 
-    const the_bone = bone(targetBone);
+    const the_bone = bone(targetBone.current);
     if (!the_bone) {
         console.log('no Bone');
         return

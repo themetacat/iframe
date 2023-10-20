@@ -248,7 +248,7 @@ const handleMint = React.useCallback(() => {
 
 const handleBag = React.useCallback(() => {
   const getData = async () => {
-    console.log(router?.tokenId);
+    // // console.log(router.query.tokenId);
 
     try {
       const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
@@ -266,7 +266,7 @@ const handleBag = React.useCallback(() => {
   };
 
   getData();
-}, [router?.tokenId]);
+}, []);
 
 // useEffect(() => {
 

@@ -166,7 +166,7 @@ export default function DclContent() {
     //   return getRandom(arr);
     // }
     let modelMesh:any = null;
-    let targetBone:any = null;
+    let targetBone:any = React.useRef(null);
     // let attachmentId = null;
     let last_rotation:any  ={};
     // let all_last_rotation = {};
@@ -253,7 +253,7 @@ export default function DclContent() {
              
               // (window as any).droppedWearable = att;
               windowVal['droppedWearable']= att
-              targetBone = att.bone;
+              targetBone.current = att.bone;
               attachmentId.current = att.uuid;
               all_last_rotation.current[attachmentId.current] = att.rotation;
   
@@ -564,7 +564,7 @@ export default function DclContent() {
       const onDrop = function () {
         hideBoneSpheres(); // 隐藏骨骼球体
         // 异步添加可穿戴物品到装饰中
-        if (!targetBone) {
+        if (!targetBone.current) {
           console.log("no Bone");
           return;
         }
@@ -581,7 +581,7 @@ export default function DclContent() {
         //     return;
         // }
   
-        addAttachment(droppedWearable, targetBone)
+        addAttachment(droppedWearable, targetBone.current)
           // .then(() => {})
           // .catch((error) => {
           //   console.error("Error adding attachment:", error);
@@ -714,7 +714,7 @@ export default function DclContent() {
             return;
           }
   
-          const the_bone = bone(targetBone);
+          const the_bone = bone(targetBone.current);
   
           if (!the_bone) {
             console.log("no Bone");
