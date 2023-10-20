@@ -95,7 +95,6 @@ export async function getERC1155ApprovedOperators(
       }
     }
   `;
-  console.log(request(subgraphUrl, query),subgraphUrl, query);
   try {
     const response = await request(subgraphUrl, query);
     
