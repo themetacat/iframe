@@ -235,6 +235,7 @@ export default function DclContent() {
     
         
   if(router){
+  console.log(router?.tokenId);
   
   
         const getModelInfoData = getModelInfo(router?.tokenId);

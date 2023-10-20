@@ -96,7 +96,7 @@ export default function Token({ params, searchParams }: TokenParams) {
   }, [nftImages]);
 
   // Fetch nft's TBA
-  const { data: account } = useSWR(router?.tokenId ? `/account/${tokenId}` : null, async () => {
+  const { data: account } = useSWR(router?.tokenId ? `/account/${router?.tokenId}` : null, async () => {
     
     const result = await getAccount(Number(router?.tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358','0',router?.contractAddress as any, chainIdNumber);
    
@@ -248,7 +248,7 @@ const handleMint = React.useCallback(() => {
 
 const handleBag = React.useCallback(() => {
   const getData = async () => {
-    // // console.log(router.query.tokenId);
+    console.log(router?.tokenId);
 
     try {
       const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
@@ -266,7 +266,7 @@ const handleBag = React.useCallback(() => {
   };
 
   getData();
-}, []);
+}, [router?.tokenId]);
 
 // useEffect(() => {
 
