@@ -19,13 +19,7 @@ import vox from "vox.js";
 export default function VoxFiled() {
   const router = useParams();
 
-  const [editNum, setEditNum] = useState(null);
  
-  const [editNumPo, setEditNumPo] = useState({ x: 0, y: 0 ,z:0} as any);
-  const [editNumRoX, setEditNumRoX] = useState({ x: 0, y: 0 ,z:0} as any);
-  
-  const [editNumSaX, setEditNumSaX] = useState({ x: 1, y: 1 ,z:1} as any);
-  const [getdroppedWearable, setGetdroppedWearable] = useState({});
   const [voxMeshState, setVoxMeshState] = useState(null);
   const [costume, setCostume] = useState({  
     // token_id: router.query.tokenID,
@@ -50,8 +44,6 @@ export default function VoxFiled() {
 
   let skeleton:any = null;
   function num(value:any) {
-    // // console.log(value,'value');
-    
     const t = parseFloat(value);
     return t;
     // return t.toString() === value.toString() ? t : null;
@@ -62,9 +54,6 @@ export default function VoxFiled() {
     
     parser
       .parse(
-        
-        // "https://www.voxels.com"+requestConfig.url
-          // "https://wearable.vercel.app/"+requestConfig.url.hash+".vox"
           "https://wearable.vercel.app/"+requestConfig.voxHash+".vox"
       )
       .then(function (parsed:any) {
@@ -109,21 +98,16 @@ export default function VoxFiled() {
         while (i < vertData.length) {
           const textureIndex = vertData[i + 7];
 
-          // const color = new BABYLON.Color3(1, 1, 0)
-          // var a = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
+          positions.push(fx(vertData[i + 0] * s));
+          positions.push(fy(vertData[i + 1] * s));
+          positions.push(fz(vertData[i + 2] * s));
+          i += 8;
 
           positions.push(fx(vertData[i + 0] * s));
           positions.push(fy(vertData[i + 1] * s));
           positions.push(fz(vertData[i + 2] * s));
           i += 8;
 
-          // var b = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
-          positions.push(fx(vertData[i + 0] * s));
-          positions.push(fy(vertData[i + 1] * s));
-          positions.push(fz(vertData[i + 2] * s));
-          i += 8;
-
-          // var c = new BABYLON.Vector3(vertData[i + 0], vertData[i + 1], vertData[i + 2])
           positions.push(fx(vertData[i + 0] * s));
           positions.push(fy(vertData[i + 1] * s));
           positions.push(fz(vertData[i + 2] * s));
@@ -194,39 +178,24 @@ export default function VoxFiled() {
         vertexData.positions = t;
         vertexData.indices = r;
         vertexData.colors = co;
-        // // console.log(t);
-        // // console.log(r)
-        // // console.log(co);
-        // BABYLON.VertexData.ComputeNormals(positions, indices, normals);
-        // vertexData.normals = normals;
-
+    
         vertexData.applyToMesh(voxMesh);
-        // voxMesh.position.y = 0.926;
-        // voxMesh.position.y = 1.509;
-
       
-
-
         voxMesh.checkCollisions = false;
         voxMesh.refreshBoundingInfo();
         return voxMesh;
       });
     
-      // (window as any).get_vox_data = get_vox_data;
 
   };
   useEffect(() => {
     const canvas = document.getElementById("renderCanvas");
-    // // console.log(canvas);
 
     const engine = new BABYLON.Engine(canvas as HTMLCanvasElement, true);
     const createScene = function () {
       const scene = new BABYLON.Scene(engine);
-
-
       // Set the scene's clear color
       scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
-
       // 创建 ArcRotateCamera 相机
       const camera = new BABYLON.ArcRotateCamera(
         "Camera",
@@ -258,18 +227,6 @@ export default function VoxFiled() {
         scene
       );
       skybox.isPickable = false;
-
-      // const skyMaterial = new BABYLON.GradientMaterial("skybox/horizon", scene);
-      // skyMaterial.offset = 0;
-      // skyMaterial.scale = -0.01;
-      // skyMaterial.topColor.set(0.7, 0.7, 0.7);
-      // skyMaterial.bottomColor.set(1, 1, 1);
-      // skyMaterial.backFaceCulling = false;
-      // skyMaterial.disableLighting = true;
-      // skyMaterial.blockDirtyMechanism = true;
-      // skybox.material = skyMaterial;
-
-      // createLightRing(scene, camera)
 
       // 设置高亮层
       const highlightLayer = new BABYLON.HighlightLayer("selected", scene, {
@@ -316,11 +273,8 @@ export default function VoxFiled() {
           bodyMesh = meshes[1];
           bodyMesh.material = costumeMaterial;
           bodyMesh.isPickable = false;
-          // this.applySkin();
           skeletonRoot = skeletons[0];
-          // window["skeleton"] = skeletonRoot;
           skeleton = skeletonRoot;
-// console.log(skeleton);
 
           const bones = skeletonRoot.bones.filter(
             (bone) => !bone.name.match(/index/i)
@@ -372,20 +326,15 @@ export default function VoxFiled() {
     });
 
     async function onLoadCostume() {
-      // // console.log(router.query.tokenID);
-// // console.log(getModelInfo(19));
+   
       const getModelInfoData = getModelInfo(router?.tokenId)
       
       getModelInfoData.then(async(getModelInfoItem)=>{
         if (JSON.stringify(getModelInfoItem.data) === '{}') {
-          // console.log('错误');
+          console.log('错误');
         }else{
         const data = getModelInfoItem.data;
-        // const data = await response.json();
-  // // console.log(data,'data');
-  // if(getModelInfoItem.data){
-    
-  // }
+       
         // 在这里使用从JSON文件中读取到的数据
         const attachments = data.attachments;
   
@@ -402,7 +351,6 @@ export default function VoxFiled() {
             renderVoxModel();
   
         }
-        // onClick(null)
         }
       })
      
@@ -457,10 +405,9 @@ export default function VoxFiled() {
     origin.rotation.x = -Math.PI / 2;
 
     const the_bone = bone(targetBone.current);
-    // console.log(bone(targetBone.current),targetBone.current);
     
     if (!the_bone) {
-        // console.log('no Bone');
+        console.log('no Bone');
         return
     }
     if (get_avatar()) {
@@ -482,14 +429,12 @@ setVoxMeshState(voxMesh)
 }
 
 function bone(e:any) {
-      // console.log(skeleton);
       
   if (!skeleton) return null;
   const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
-// console.log(t);
 
   if (t == -1) {
-    // console.error(`Bad bone name "${e}"`);
+    console.error(`Bad bone name "${e}"`);
     return null;
   }
   return skeleton.bones[t];
@@ -614,144 +559,6 @@ function bone(e:any) {
         className="active"
       >
         <canvas id="renderCanvas" className={style.canvas}></canvas>
-        {/* <div style={{ position: "absolute", top: "10px" ,display:"none"}}>
-          <button className={style.btn} id="gizmo-position">Position</button>
-          <button className={style.btn} id="gizmo-rotation">Rotation</button>
-          <button className={style.btn} id="gizmo-scale">Scale</button>
-        </div> */}
-        {/* <div style={{ position: "absolute", right: "10px", top: "10px" ,width:"30%",display:"none"}}>
-          <div className="editor-field position">
-            <label>Position</label>
-            <div className="fields">
-              <input
-                id="position[x]"
-                type="number"
-                step="0.01"
-                title="x"
-                value={editNumPo.x}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("position", 0, inputElement.value);
-                }}
-                onChange={onChangeEdiumX}
-              />
-              <input
-                id="position[y]"
-                type="number"
-                step="0.01"
-                title="y"
-                value={editNumPo.y}
-                onChange={onChangeEdiumY}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("position", 1, inputElement.value);
-                }}
-               
-              />
-            
-              <input
-                id="position[z]"
-                type="number"
-                step="0.01"
-                title="z"
-                value={editNumPo.z}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("position", 2, inputElement.value);
-                }}
-                onChange={onChangeEdiumZ}
-              />
-            </div>
-          </div>
-          <div className="editor-field rotation">
-            <label>Rotation</label>
-            <div className="fields">
-              <input
-                id="rotation[x]"
-                type="number"
-                step="2"
-                title="x"
-                value={editNumRoX.x}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("rotation", 0, inputElement.value);
-                }}
-                onChange={onChangeEdiumRoX}
-              />
-              <input
-                id="rotation[y]"
-                type="number"
-                step="2"
-                title="y"
-                value={editNumRoX.y}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("rotation", 1, inputElement.value);
-                }}
-                onChange={onChangeEdiumRoY}
-              />
-              <input
-                id="rotation[z]"
-                type="number"
-                step="2"
-                title="z"
-                value={editNumRoX.z}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("rotation", 2, inputElement.value);
-                }}
-                onChange={onChangeEdiumRoZ}
-              />
-            </div>
-          </div>
-          <div className="editor-field scale-all">
-            <label>Scale</label>
-            <div className="fields">
-              <input
-                id="scale[x]"
-                type="number"
-                step="0.01"
-                title="all"
-                value={editNumSaX.x}
-                onInput={(event) => {
-                  
-                      const inputElement = event.target as HTMLInputElement;
-                  updatePosition("scale", 0, inputElement.value);
-                }}
-                onChange={onChangeEdiumSaX}
-              />
-              <input
-                id="scale[y]"
-                type="number"
-                step="0.01"
-                title="all"
-                value={editNumSaX.y}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("scale", 1, inputElement.value);
-                }}
-                onChange={onChangeEdiumSaY}
-              />
-              <input
-                id="scale[z]"
-                type="number"
-                step="0.01"
-                title="all"
-                value={editNumSaX.z}
-                onInput={(event) => {
-                    const inputElement = event.target as HTMLInputElement;
-                  updatePosition("scale", 2, inputElement.value);
-                }}
-                onChange={onChangeEdiumSaZ}
-              />
-            </div>
-          </div>
-          <div>
-            <button className={style.buton} id="mesh_dispose">Remove</button>
-            <button className={style.buton} id="upload">Upload</button>
-          </div>
-          <div id="wearable_list"></div>
-        </div> */}
       </div>
     </>
   );
