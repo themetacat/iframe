@@ -455,6 +455,8 @@ export default function VoxFiled() {
     origin.rotation.x = -Math.PI / 2;
 
     const the_bone = bone(targetBone.current);
+    console.log(bone(targetBone.current),targetBone.current);
+    
     if (!the_bone) {
         console.log('no Bone');
         return
