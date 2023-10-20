@@ -320,6 +320,7 @@ export default function VoxFiled() {
           skeletonRoot = skeletons[0];
           // window["skeleton"] = skeletonRoot;
           skeleton = skeletonRoot;
+console.log(skeleton);
 
           const bones = skeletonRoot.bones.filter(
             (bone) => !bone.name.match(/index/i)
@@ -480,9 +481,11 @@ setVoxMeshState(voxMesh)
 }
 
 function bone(e:any) {
+      console.log(skeleton);
       
   if (!skeleton) return null;
   const t = skeleton.getBoneIndexByName(`mixamorig:${e}`);
+console.log(t);
 
   if (t == -1) {
     console.error(`Bad bone name "${e}"`);
