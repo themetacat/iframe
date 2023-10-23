@@ -271,6 +271,10 @@ export default function VoxFiled() {
           costumeMesh.isPickable = false;
 
           bodyMesh = meshes[1];
+          scene.registerBeforeRender(function () {
+            // 每一帧更新模型的旋转
+            bodyMesh.rotate(BABYLON.Axis.Y, Math.PI / 360, BABYLON.Space.LOCAL); // 这里的 0.01 控制旋转速度，可以根据需要调整
+    });
           bodyMesh.material = costumeMaterial;
           bodyMesh.isPickable = false;
           skeletonRoot = skeletons[0];

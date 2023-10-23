@@ -54,7 +54,7 @@ export default function Token({ params, searchParams }: TokenParams) {
   const [getCode, setGetCode] = useState(false);
   const [popUp, setPopUp] = useState(false);
   const [editNum, setEditNum] = useState("WalletConnect URI");
-  const [dataInfoList, setDataInfoList] = React.useState([] || null);
+  const [dataInfoList, setDataInfoList] = React.useState(true);
   const [dataInfo, setDataInfo] = React.useState([] || null);
 
 
@@ -97,11 +97,7 @@ export default function Token({ params, searchParams }: TokenParams) {
 
   // Fetch nft's TBA
   const { data: account } = useSWR(router?.tokenId ? `/account/${router?.tokenId}` : null, async () => {
-    
     const result = await getAccount(Number(router?.tokenId), '0x2d25602551487c3f3354dd80d76d54383a243358','0',router?.contractAddress as any, chainIdNumber);
-   
-   
-    
     return result.data;
   });
 
@@ -186,6 +182,7 @@ const handleMint = React.useCallback(() => {
       // let wearableType =null;
       // // console.log(tokenboundAccountNum, 333);
       setDataInfo(response.ownedNfts);
+      
       if (response.ownedNfts.length !== 0) {
         //         }else{
         response.ownedNfts.map((item:any) => {
@@ -230,10 +227,11 @@ const handleMint = React.useCallback(() => {
             }
           }
         });
-
+      } else {
+        setDataInfoList(false);
+      }
 
     
-      }
 
       
     } catch (error) {
@@ -293,21 +291,24 @@ const jumpToOpenC = (item:any) => {
         ) : null}
          {wearableType==='Other'||wearableType===null? (
           <>
-        <div
-                className={cn(
-                  "grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5",
-                  style.dataSourceCard
-                )}
-                id="eventData"
-              >
-                {dataInfoList === null ? (
+       
+                {dataInfoList === false? (
                   <>
-                    <p className={style.nothingInfo}>
+                    {/* <p className={style.nothingInfo}>
                       You don&apos;t have any wearable in this bag.
-                    </p>
+                    </p> */}
+                     <DclContent />
                   </>
                 ) : (
+                  <div
+                  className={cn(
+                    "grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 mt-5",
+                    style.dataSourceCard
+                  )}
+                  id="eventData"
+                >
                   <>
+
                     {dataInfo.map((item:any) => {
                       return (
                         <div className={style.boxContent} key={item.id}>
@@ -362,8 +363,9 @@ const jumpToOpenC = (item:any) => {
                       );
                     })}
                   </>
+                   </div>
                 )}
-              </div>
+             
               </>   ):<></>}
       
         </div>

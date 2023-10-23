@@ -62,12 +62,13 @@ export default function DclContent() {
 
           getModelInfoData.then(async (getModelInfoItem) => {
             if (JSON.stringify(getModelInfoItem.data) === "{}") {
-              console.log("错误");
+              // console.log("错误");
             } else {
               const data = getModelInfoItem.data;
               const attachments = data.attachments;
 
               for (let att of attachments) {
+
                 if (!att.type || att.type != "dcl") {
                   continue;
                 }
@@ -77,9 +78,18 @@ export default function DclContent() {
                 targetBone.current = att.bone;
                 attachmentId.current = att.uuid;
                 all_last_rotation.current[attachmentId.current] = att.rotation;
+                // 定义一个内部函数，用于执行 renderModel
+                const executeRenderModel = async () => {
+                  if (modelList[att.hashValue]) {
+                    return; // 退出内部函数，不会影响外部循环
+                  }
 
+                  // 执行 renderModel 的其他逻辑
+                  await renderModel();
+                };
+                executeRenderModel()
                 //   costume.attachments.push(att);
-                await renderModel();
+                // await renderModel();
               }
             }
           });
@@ -120,7 +130,18 @@ export default function DclContent() {
           scene
         );
         skybox.isPickable = false;
+        // 创建一个函数来控制wearable的自动旋转
+        // const animateWearable = () => {
+        //   requestAnimationFrame(animateWearable);
 
+        // 使wearable自动旋转
+        // modelMesh.rotation.x += 0.01;
+        // modelMesh.rotation.y += 0.01;
+
+        // // 渲染场景
+        // scene.render(true, true);
+        // };
+        // animateWearable();
         // 设置高亮层
         const highlightLayer = new BABYLON.HighlightLayer("selected", scene, {
           isStroke: true,
@@ -149,10 +170,14 @@ export default function DclContent() {
           scene,
           (meshes, particleSystems, skeletons) => {
             // BABYLON.SceneLoader.ImportMesh(null, `../`, "avatar.glb", scene, (meshes, particleSystems, skeletons) => {
-            let costumeMesh, bodyMesh, skeletonRoot;
+            let costumeMesh:any, bodyMesh, skeletonRoot;
 
             // feet hands head lbody    ubody 8
             costumeMesh = meshes[0];
+            scene.registerBeforeRender(function () {
+              // 每一帧更新模型的旋转
+              costumeMesh.rotate(BABYLON.Axis.Y, Math.PI / 360, BABYLON.Space.LOCAL); // 这里的 0.01 控制旋转速度，可以根据需要调整
+      });
             const costumeId = 1;
             costumeMesh.id = `costume/${costumeId}`;
             costumeMesh.visibility = 0;
@@ -397,6 +422,7 @@ export default function DclContent() {
 
         return skeleton.current.bones[t];
       };
+
       const renderModel = async function () {
         await new Promise((resolve) => {
           let the_wearable = getDroppedWearable();
@@ -405,6 +431,12 @@ export default function DclContent() {
             return;
           }
 
+          //   modelList[the_wearable.hashValue].forEach(hashValue:any => {
+          //     if (modelList[the_wearable.hashValue]) {
+          //         return; // 在forEach中，使用return相当于在for循环中使用continue
+          //     }
+          //     // 其他代码...
+          // })
           const the_bone = bone(targetBone.current);
 
           if (!the_bone) {
@@ -420,6 +452,7 @@ export default function DclContent() {
             shaderMaterial.emissiveColor.set(0.3, 0.3, 0.3);
             shaderMaterial.diffuseColor.set(1, 1, 1);
             shaderMaterial.blockDirtyMechanism = true;
+
             // .token_id===the_wearable.token_id
             modelMesh = new BABYLON.Mesh("utils/wearable_dcl", scene);
             modelMesh.material = shaderMaterial;
@@ -444,6 +477,8 @@ export default function DclContent() {
                 last_rotation = [];
 
                 if (the_wearable?.position && the_wearable?.rotation && the_wearable?.scaling) {
+                  // console.log(1);
+
                   updateAllPositionValue("load_model_json");
                 } else {
                   updateAllPositionValue(null);
@@ -481,6 +516,7 @@ export default function DclContent() {
           for (var i = 0; i < childMeshes.length; i++) {
             var childMesh = childMeshes[i];
             lay.addMesh(childMesh, col);
+
             // 在这里对每个子网格进行操作，比如设置材质、位置、旋转等
           }
         }
@@ -494,6 +530,7 @@ export default function DclContent() {
             let the_wearable = getDroppedWearable();
 
             modelMesh.position.x = parseFloat(the_wearable.position[0]);
+
             modelMesh.position.y = parseFloat(the_wearable.position[1]);
             modelMesh.position.z = parseFloat(the_wearable.position[2]);
 
@@ -540,10 +577,24 @@ export default function DclContent() {
       }
     };
   }, []);
-
+  // const sceneRef = React.useRef(null);
+  const triggerModelRotation = React.useCallback((roatation: any) => {
+    // if (sceneRef.current) {
+    //   sceneRef.current.userData.targetRotation = roatation;
+    // }
+  }, []);
   return (
     <>
-      <div id="gizmos" className="active">
+      <div
+        id="gizmos"
+        className="active"
+        onMouseEnter={() => {
+          triggerModelRotation(true);
+        }}
+        onMouseLeave={() => {
+          triggerModelRotation(false);
+        }}
+      >
         <canvas id="renderCanvasDcl" className={style.canvas}></canvas>
       </div>
     </>
