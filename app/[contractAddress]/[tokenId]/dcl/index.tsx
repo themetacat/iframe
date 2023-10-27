@@ -4,14 +4,15 @@ import * as BABYLON from "babylonjs";
 import "@babylonjs/loaders/glTF";
 import "babylonjs-loaders";
 import "babylonjs-materials";
+import cn from "classnames";
 import axios from "axios";
 import { getModelInfo, setModelInfo, getBagsDetail, getDataHandle } from "../../../../service";
-
+import Status from "../../../status";
 import { useRouter, useParams } from "next/navigation";
 
 export default function DclContent() {
   const router = useParams();
-
+  const [loading, setloading] = useState(false);
   const [voxMeshState, setVoxMeshState] = useState(null);
   const [editNum, setEditNum] = useState(null);
   const [costumeData, setcostumeData] = useState(null);
@@ -100,6 +101,7 @@ export default function DclContent() {
         const scene = new BABYLON.Scene(engine);
         scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
         // 创建 ArcRotateCamera 相机
+        setloading(true)
         const camera = new BABYLON.ArcRotateCamera(
           "Camera",
           -1.57,
@@ -244,9 +246,11 @@ export default function DclContent() {
               boneSphere.setEnabled(false);
               bones_index += 1;
             });
+            setloading(false)
           }
+          
         );
-
+        // setloading(false)
         return scene;
       };
       const scene = createScene();
@@ -597,6 +601,7 @@ export default function DclContent() {
       >
         <canvas id="renderCanvasDcl" className={style.canvas}></canvas>
       </div>
+      {loading === true ? <div className={style.loadingSet}><Status mini={true} status="loading" /></div> : null}
     </>
   );
 }

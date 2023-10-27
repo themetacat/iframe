@@ -6,7 +6,27 @@ body {
     margin: 0;
     padding: 0;
 } */
-
+.baseText{
+  padding-top: 100px;
+  padding-bottom: 100px;
+  color: rgba(153, 153, 153, 1);
+  animation: spin 1s linear infinite;
+}
+.commonCls1{
+  animation: spin 5s linear infinite;
+  -webkit-transform: rotate(3600deg);
+  transform: rotate(3600deg);
+  -webkit-transition: -webkit-transform 5s linear;
+  transition: transform 5s linear;
+  
+}
+.loadingSet{
+  /* position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-55%,90%); */
+  z-index: 9999999;
+ }
 .canvas {
     width:65%;
     height: 500px;
@@ -14,6 +34,10 @@ body {
     position: absolute;
     left: 17%;
 }
+/* .mini{
+  padding: 0px;
+  color: rgba(153, 153, 153, 1);
+} */
 .btn{
     width: 100px;
     height: 30px;

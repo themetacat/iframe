@@ -1,0 +1,125 @@
+.baseImg{
+  width: 181px;
+  /* height: 120px; */
+}
+.baseImgCon{
+  width: 181px;
+  /* height: 120px; */
+}
+.retry{
+  width: 86px;
+  height: 37px;
+  background: #00D0EC;
+  color: rgba(15, 25, 27, 1)
+}
+
+.baseText{
+  padding-top: 100px;
+  padding-bottom: 100px;
+  color: rgba(153, 153, 153, 1);
+  animation: spin 1s linear infinite;
+}
+.commonCls1{
+  animation: spin 5s linear infinite;
+  -webkit-transform: rotate(3600deg);
+  transform: rotate(3600deg);
+  -webkit-transition: -webkit-transform 5s linear;
+  transition: transform 5s linear;
+  
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* 半透明的黑色背景 */
+  z-index: 9999; /* 设置一个高的 z-index 值，确保在页面元素之上 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.join{
+
+  align-items: center;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  margin-left: 20px;
+}
+.apply{
+  display: inline-block;
+  align-items: center;
+  text-align: center;
+  text-transform: capitalize;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 17px;
+  background: linear-gradient(92.54deg, #00D0EC 0%, #00ECB3 99.53%);
+  border-radius: 4px;
+  width: 90px;
+  height: 25px;
+  padding: 4px 20px 4px 20px;
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  color: #0F191B;
+}
+.createrCont{
+  margin-top: 15.5px;
+  height: 44px;
+  line-height: 44px;
+  width: 1200px;
+  color: rgba(255, 207, 95, 1);
+ 
+  border-radius: 6px;
+    position: relative;
+  background-color: rgba(1, 218, 217, 0.3);
+  
+}
+.mmt{
+  font-family: 'Aclonica';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 18px;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  margin-top: 12px;
+}
+.waitBuilder{
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 150%;
+  align-items: center;
+  text-align: center;
+  text-transform: capitalize;
+  color: #FFCF5F;
+}
+
+.mini{
+  padding: 0px;
+  color: rgba(153, 153, 153, 1);
+}
+.nowork{
+  background: linear-gradient(92.54deg, #00D0EC 0%, #00ECB3 99.53%);
+  border-radius: 4px;
+  padding: 4px 20px 4px 20px;
+  color: #0F191B;
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  cursor: pointer;
+}

@@ -9,7 +9,7 @@ import "babylonjs-loaders";
 import { getModelInfo,setModelInfo,getBagsDetail} from "../../../../service";
 
 import { useRouter ,useParams} from 'next/navigation';
-
+import Status from "../../../status";
 
 import "babylonjs-materials";
 import vox from "vox.js";
@@ -19,7 +19,7 @@ import vox from "vox.js";
 export default function VoxFiled() {
   const router = useParams();
 
- 
+  const [loading, setloading] = useState(false);
   const [voxMeshState, setVoxMeshState] = useState(null);
   const [costume, setCostume] = useState({  
     // token_id: router.query.tokenID,
@@ -197,6 +197,7 @@ export default function VoxFiled() {
       // Set the scene's clear color
       scene.clearColor = new BABYLON.Color4(1, 1, 1, 1);
       // 创建 ArcRotateCamera 相机
+      setloading(true)
       const camera = new BABYLON.ArcRotateCamera(
         "Camera",
         -1.57,
@@ -313,6 +314,7 @@ export default function VoxFiled() {
             boneSphere.setEnabled(false);
           });
           onLoadCostume()
+          setloading(false)
         }
       );
 
@@ -564,6 +566,7 @@ function bone(e:any) {
       >
         <canvas id="renderCanvas" className={style.canvas}></canvas>
       </div>
+      {loading === true ? <div className={style.loadingSet}><Status mini={true} status="loading" /></div> : null}
     </>
   );
 }

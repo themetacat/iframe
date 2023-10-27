@@ -3,6 +3,20 @@
     height: 80%;
     touch-action: none;
 }
+.baseText{
+  padding-top: 100px;
+  padding-bottom: 100px;
+  color: rgba(153, 153, 153, 1);
+  animation: spin 1s linear infinite;
+}
+.commonCls1{
+  animation: spin 5s linear infinite;
+  -webkit-transform: rotate(3600deg);
+  transform: rotate(3600deg);
+  -webkit-transition: -webkit-transform 5s linear;
+  transition: transform 5s linear;
+  
+}
 .canvas {
     /* width:65%;
     height: 500px; */

@@ -11,6 +11,7 @@ import { polygon } from "viem/chains";
 import { rpcClient } from "@/lib/clients";
 import { TbLogo } from "@/components/icon";
 import { useGetApprovals, useNft } from "@/lib/hooks";
+import Status from "../../../status";
 import { TbaOwnedNft } from "@/lib/types";
 import { getAddress } from "viem";
 import { TokenDetail } from "./TokenDetail";
@@ -46,7 +47,7 @@ export default function Token({ params, searchParams }: TokenParams) {
   const chainIdNumber = parseInt(chainId);
   const router = useParams();
   const userouter = useRouter();
-
+  const [loading, setloading] = useState(false);
 
   const [tokenboundAccountNum, setTokenboundAccountNum] = useState("");
   const [title, setTitle] = useState("");
@@ -177,12 +178,11 @@ export default function Token({ params, searchParams }: TokenParams) {
 const handleMint = React.useCallback(() => {
   const getData = async () => {
     try {
-    
+    if(account){
       const response = await getBagsDetail(account); // 假设 getBagsDetail 是一个异步函数
       // let wearableType =null;
       // // console.log(tokenboundAccountNum, 333);
       setDataInfo(response.ownedNfts);
-      
       if (response.ownedNfts.length !== 0) {
         //         }else{
         response.ownedNfts.map((item:any) => {
@@ -230,6 +230,10 @@ const handleMint = React.useCallback(() => {
       } else {
         setDataInfoList(false);
       }
+    }
+    
+      
+    
 
     
 
@@ -247,11 +251,14 @@ const handleBag = React.useCallback(() => {
     // // console.log(router.query.tokenId);
 
     try {
-      const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
-      const wearableTypeEach = response.tokenUri.raw;
+      if(router?.tokenId){
+        const response = await getBagsNum(router?.tokenId); // 假设 getBagsDetail 是一个异步函数
+        const wearableTypeEach = response.tokenUri.raw;
+       
+  
+        setTitle(response.title);
+      }
      
-
-      setTitle(response.title);
     } catch (error) {
       console.error(error);
     }
@@ -274,7 +281,11 @@ const jumpToOpenC = (item:any) => {
   );
 };
 
-
+// const commonCls = cn(
+//   'flex w-full flex-col justify-center items-center py-10',
+//   mini ? style.mini : style.baseText,
+ 
+// );
   return (
     <div className="">
       <div className="max-w-screen relative mx-auto aspect-square max-h-screen overflow-hidden bg-white">
@@ -294,9 +305,6 @@ const jumpToOpenC = (item:any) => {
        
                 {dataInfoList === false? (
                   <>
-                    {/* <p className={style.nothingInfo}>
-                      You don&apos;t have any wearable in this bag.
-                    </p> */}
                      <DclContent />
                   </>
                 ) : (
@@ -313,14 +321,6 @@ const jumpToOpenC = (item:any) => {
                       return (
                         <div className={style.boxContent} key={item.id}>
                           <img src={item.metadata.image} alt="" />
-                          {/* <img
-                            alt="" 
-                            src="/images/Nomal.png"
-                            className={style.icon}
-                            onClick={() => {
-                              jumpToOpenC(item);
-                            }}
-                          ></img> */}
                           <div className={style.worldCon}>
                             {item.tokenUri.raw.includes(
                               "https://www.cryptovoxels.com"
@@ -367,9 +367,10 @@ const jumpToOpenC = (item:any) => {
                 )}
              
               </>   ):<></>}
-      
         </div>
       </div>
+      {/* {loading === true ? <div className={style.loadingSet}><Status mini={true} status="loading" /></div> : null} */}
+      
     </div>
   );
 }
